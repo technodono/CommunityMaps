@@ -1,10 +1,11 @@
-<map proto="1.4.0">
+<map proto="1.4.2">
 <name>Ciudad Costera</name>
-<version>1.1.2</version>
+<version>1.1.4</version>
 <objective>Capture the most flags possible!</objective>
+<created>2021-12-29</created>
 <authors>
-    <author uuid="1aad55f7-2dea-4f22-85ca-ad9de3a78609" contribution="Map Builder + XML"/> <!-- Technodono -->
-    <author uuid="6863869b-4b8c-4445-b778-a8e016775ae4" contribution="Map Builder"/> <!-- Cazadorian -->
+    <author uuid="1aad55f7-2dea-4f22-85ca-ad9de3a78609" contribution="Map builder + XML"/> <!-- Technodono -->
+    <author uuid="6863869b-4b8c-4445-b778-a8e016775ae4" contribution="Map builder"/> <!-- Cazadorian -->
 </authors>
 <rules>
     <rule>Fall damage is disabled!</rule>
@@ -40,8 +41,8 @@
 <spawns>
     <default>
         <regions>
-            <block>-1,22,90</block>
-            <block>-30,22,90</block>
+            <block>-1,23,90</block>
+            <block>-30,23,90</block>
         </regions>
     </default>
     <spawn team="blue" kit="spawn-kit" yaw="90">
@@ -76,8 +77,8 @@
 <regions>
     <rectangle id="red-base" min="-90,48" max="-80,55"/>
     <rectangle id="blue-base" min="49,48" max="59,55"/>
-    <rectangle id="red-net" min="-85,54" max="-90,49"/>
-    <rectangle id="blue-net" min="54,49" max="59,54"/>
+    <cuboid id="red-net" min="-85,9,54" max="-90,12,49"/>
+    <cuboid id="blue-net" min="54,9,49" max="59,12,54"/>
     <apply block="never" region="everywhere"/>
     <apply use="never" region="everywhere"/>
     <apply block-physics="never" region="everywhere"/>
