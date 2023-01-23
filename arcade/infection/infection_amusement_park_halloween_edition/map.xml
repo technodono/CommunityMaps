@@ -1,7 +1,7 @@
-<?xml version="1.0"?>
 <map proto="1.4.0" game="Infection">
 <name>Infection: Amusement Park Halloween Edition</name>
-<version>1.0.0</version> <!-- Regular 1.0.6 -->
+<version>1.0.2</version> <!-- Regular 1.0.8 -->
+<phase>development</phase>
 <objective>Kill all the humans before the 8 minutes are up!</objective>
 <created>2022-10-03</created>
 <gamemode>arcade</gamemode>
@@ -80,6 +80,9 @@
     <mode id="start-game" after="25s" material="air" name="`3Infected are being released"/>
 </modes>
 <filters>
+    <deny id="deny-players">
+        <participating/>
+    </deny>
     <team id="only-humans">humans-team</team>
     <team id="only-infected">infected-team</team>
     <not id="before-30s">
@@ -100,7 +103,7 @@
     </union>
     <!-- applicators -->
     <apply use="deny-door" region="door-region"/>
-    <apple block="never"/>
+    <apply block="deny-players"/>
 </regions>
 <itemremove>
     <item>leather helmet</item>
