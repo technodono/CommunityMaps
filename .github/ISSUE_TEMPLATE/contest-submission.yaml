@@ -24,6 +24,10 @@ body:
           required: false
         - label: I have created an XML file.
           required: false
+        - label: The xml file has development phase enabled for the map.
+          required: false
+        - label: The map has a timelimit of 30 minutes or less for the purpouses of testing throughout the contest.
+          required: false
         - label: I have created a map image.
           required: false
         - label: I have uploaded the map zip file to a file sharing service.
