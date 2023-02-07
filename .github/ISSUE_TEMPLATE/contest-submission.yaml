@@ -30,6 +30,10 @@ body:
           required: false
         - label: The map has been tested locally to make sure it works.
           required: false
+        - label: The map has been been properly assigned the development phase in the XML files attached.
+          required: false
+        - label: The map has has a timelimit of 30 minutes or less as per contest guidelines.
+          required: false
   - type: input
     id: map-name
     attributes:
