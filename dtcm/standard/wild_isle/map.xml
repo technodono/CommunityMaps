@@ -1,11 +1,8 @@
 <map proto="1.4.2">
 <name>Wild Isle</name>
-<<<<<<< HEAD
-<version>1.2.3</version>
-=======
-<version>1.2.4</version>
->>>>>>> upstream/master
+<version>1.3.2</version>
 <objective>Destroy both enemy monuments!</objective>
+<created>2021-10-18</created>
 <authors>
     <author uuid="ec5ec930-5cf3-4f8a-ad9f-09056aeed71b"/> <!-- Tundren -->
     <author uuid="b2539be1-8f98-4375-b653-9d91cd04c30e"/> <!-- Mewzzy -->
@@ -17,8 +14,8 @@
     <contributor uuid="1987fc00-a5b2-43b5-b94b-e3c0d25776e9" contribution="Feedback and suggestions"/> <!-- BrettOgden -->
 </contributors>
 <teams>
-    <team id="blue" color="blue" max="32">Blue</team>
-    <team id="red" color="dark red" max="32">Red</team>
+    <team id="blue" color="blue" max="24">Blue</team>
+    <team id="red" color="dark red" max="24">Red</team>
 </teams>
 <kits>
     <kit id="spawn-kit">
@@ -28,22 +25,14 @@
             <enchantment>infinity</enchantment>
         </item>
         <item slot="28" material="arrow"/>
-<<<<<<< HEAD
-=======
         <item slot="29" unbreakable="true" material="shears"/>
->>>>>>> upstream/master
-        <item slot="2" unbreakable="true" material="stone pickaxe">
-            <enchantment level="3">efficiency</enchantment>
-        </item>
+        <item slot="2" unbreakable="true" material="iron pickaxe"/>
         <item slot="3" unbreakable="true" material="iron axe">
             <enchantment>efficiency</enchantment>
         </item>
         <item slot="4" unbreakable="true" material="iron spade"/>
         <item slot="6" amount="32" material="glass"/>
-<<<<<<< HEAD
-=======
         <item slot="7" material="bucket"/>
->>>>>>> upstream/master
         <item slot="8" material="golden apple"/>
         <chestplate unbreakable="true" team-color="true" material="leather chestplate"/>
         <leggings unbreakable="true" material="chainmail leggings"/>
@@ -106,13 +95,8 @@
     </union>
     <union id="spawner-protection">
         <cylinder id="mid-gapple" base="35.5,5,187.5" radius="1.5" height="4"/>
-<<<<<<< HEAD
-        <cylinder id="north-lilypad" base="35.5,6,138.5" radius="1.5" height="4"/>
-        <cylinder id="south-lilypad" base="35.5,6,236.5" radius="1.5" height="4"/>
-=======
         <cylinder id="north-lilypad" base="35.5,5,138.5" radius="1.5" height="4"/>
         <cylinder id="south-lilypad" base="35.5,5,236.5" radius="1.5" height="4"/>
->>>>>>> upstream/master
     </union>
     <complement id="void">
         <everywhere/>
@@ -132,6 +116,7 @@
             <mirror id="south-mid-void" origin="35.5,0,187.5" normal="0,0,1" region="north-mid-void"/>
         </complement>
     </complement>
+    <circle id="middle-gapple-void" center="35.5,187.5" radius="7.5"/>
     <apply enter="only-blue" use="only-blue" region="blue-spawn" message="You may not enter the enemy team's spawn!"/>
     <apply enter="only-red" use="only-red" region="red-spawn" message="You may not enter the enemy team's spawn!"/>
     <apply use="no-beacon"/>
@@ -139,6 +124,7 @@
     <apply block="never" region="spawn-islands" message="You may not destroy the spawn islands!"/>
     <apply block="never" region="spawner-protection" message="You may not interfere with the spawners!"/>
     <apply block="deny-void" region="void" message="You may not build outside of the map!"/>
+    <apply block="never" region="middle-gapple-void" message="You may not build here!"/>
 </regions>
 <modes>
     <mode id="gold-mode" after="15m" material="gold block" name="`6GOLD MONUMENT MODE"/>
@@ -160,42 +146,28 @@
 <spawners>
     <spawner id="gapple-mid" delay="6s">
         <spawn-region>
-            <point>35.5,6.1,187.5</point>
+            <point>35.5,5.1,187.5</point>
         </spawn-region>
         <player-region>
-            <cylinder base="35.5,6,187.5" radius="5" height="6"/>
+            <cylinder base="35.5,5,187.5" radius="5" height="6"/>
         </player-region>
         <item material="golden apple"/>
     </spawner>
     <spawner id="lilypad-north" delay="2s">
         <spawn-region>
-<<<<<<< HEAD
-            <point>35.5,7.1,138.5</point>
-        </spawn-region>
-        <player-region>
-            <cylinder base="35.5,7,138.5" radius="5" height="6"/>
-=======
             <point>35.5,6.1,138.5</point>
         </spawn-region>
         <player-region>
             <cylinder base="35.5,6,138.5" radius="5" height="6"/>
->>>>>>> upstream/master
         </player-region>
         <item material="water lily"/>
     </spawner>
     <spawner id="lilypad-south" delay="2s">
         <spawn-region>
-<<<<<<< HEAD
-            <point>35.5,7.1,236.5</point>
-        </spawn-region>
-        <player-region>
-            <cylinder base="35.5,7,236.5" radius="5" height="6"/>
-=======
             <point>35.5,6.1,236.5</point>
         </spawn-region>
         <player-region>
             <cylinder base="35.5,6,236.5" radius="5" height="6"/>
->>>>>>> upstream/master
         </player-region>
         <item material="water lily"/>
     </spawner>
@@ -203,10 +175,11 @@
 <toolrepair>
     <tool>iron sword</tool>
     <tool>bow</tool>
-    <tool>stone pickaxe</tool>
+    <tool>iron pickaxe</tool>
     <tool>iron axe</tool>
     <tool>iron spade</tool>
     <tool>arrow</tool>
+    <tool>shears</tool>
 </toolrepair>
 <itemremove>
     <item>leather chestplate</item>
@@ -215,10 +188,9 @@
     <item>emerald block</item>
     <item>gold block</item>
     <item>coal block</item>
-<<<<<<< HEAD
-=======
     <item>leaves</item>
->>>>>>> upstream/master
+    <item>bucket</item>
+    <item>water bucket</item>
 </itemremove>
 <block-drops>
     <rule>
