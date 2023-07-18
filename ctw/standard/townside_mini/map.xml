@@ -1,7 +1,6 @@
-<?xml version="1.0"?>
 <map proto="1.4.2">
 <name>Townside Mini</name>
-<version>1.0.2</version>
+<version>1.0.4</version>
 <objective>Capture the wool!</objective>
 <created>2022-01-26</created>
 <authors>
@@ -22,9 +21,7 @@
             <enchantment>arrow infinite</enchantment>
         </item>
         <item slot="28" material="arrow"/>
-        <item slot="2" material="iron pickaxe" unbreakable="true">
-            <enchantment level="2">dig speed</enchantment>
-        </item>
+        <item slot="2" material="iron pickaxe" unbreakable="true"/>
         <item slot="3" material="iron axe" unbreakable="true">
             <enchantment>dig speed</enchantment>
         </item>
@@ -122,7 +119,7 @@
     <apply enter="only-red" region="red-spawn" message="You may not enter the enemy's spawn!"/>
     <apply enter="only-red" region="blue-woolroom" message="You may not enter your own wool room!"/>
     <apply enter="only-blue" region="red-woolroom" message="You may not enter your own wool room!"/>
-    <apply block-place="deny-wool" message="You may not place safty wools!"/>
+    <apply block-place="deny-wool" message="You may not place safety wools!"/>
     <apply block-place="only-iron-cause-world" block-break="only-iron" region="spawns" message="You may not edit spawn!"/>
     <apply block="blue-woolroom-filter" region="blue-woolroom" message="You may not edit the wool room!"/>
     <apply block="red-woolroom-filter" region="red-woolroom" message="You may not edit the wool room!"/>

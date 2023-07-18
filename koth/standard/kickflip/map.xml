@@ -1,10 +1,9 @@
 <map proto="1.4.2">
 <name>Kickflip</name>
-<version>1.0.2</version>
+<version>1.0.6</version>
 <objective>Be the first team to reach 750 points!</objective>
 <created>2023-01-14</created>
 <gamemode>koth</gamemode>
-<phase>development</phase>
 <authors>
     <author uuid="d5a64b26-15ea-46c4-8319-f9c83e82a1fa"/> <!-- Eliminate -->
 </authors>
@@ -37,15 +36,17 @@
         <clear/>
         <item slot="0" unbreakable="true" material="stone sword"/>
         <item slot="1" unbreakable="true" material="bow"/>
-        <item slot="7" amount="16" material="arrow"/>
-        <item slot="8" material="golden apple"/>
-        <effect duration="2s" amplifier="255">resistance</effect>
+        <item slot="2" material="golden apple"/>
+        <item slot="8" amount="16" material="arrow"/>
         <helmet unbreakable="true" team-color="true" material="leather helmet"/>
         <chestplate unbreakable="true" team-color="true" material="leather chestplate"/>
         <leggings unbreakable="true" material="chainmail leggings">
             <enchantment level="2">projectile_protection</enchantment>
         </leggings>
-        <boots unbreakable="true" material="iron boots"/>
+        <boots unbreakable="true" material="iron boots">
+            <enchantment>feather_falling</enchantment>
+        </boots>
+        <effect duration="2s" amplifier="255">resistance</effect>
         <game-mode>adventure</game-mode>
     </kit>
 </kits>
@@ -76,8 +77,8 @@
         <cuboid id="jump-pad-1" min="-14,11,-23" size="2,1,2"/>
         <cuboid id="jump-pad-2" min="13,11,20" size="2,1,2"/>
     </union>
-    <apply velocity="7,2.5,2" region="jump-pad-1"/>
-    <apply velocity="-7,2.5,-2" region="jump-pad-2"/>
+    <apply velocity="7,2.5,2" kit="yeeted" region="jump-pad-1"/>
+    <apply velocity="-7,2.5,-2" kit="yeeted" region="jump-pad-2"/>
 </regions>
 <spawners>
     <spawner spawn-region="gapple-point" player-region="everywhere" max-entities="1" delay="8s">
@@ -113,7 +114,43 @@
 <hunger>
     <depletion>off</depletion>
 </hunger>
-<disabledamage>
-    <damage>fall</damage>
-</disabledamage>
+<!-- Disables fall damage when using jump pads, reenables it after landing -->
+<kits>
+    <kit id="yeeted">
+        <action scope="player">
+            <set var="fall_variable" value="1"/>
+        </action>
+    </kit>
+    <give>
+        <!-- Reset the variable to 0 only after a player is definitely not on the jump pad, and is more certainly grounded. If we do not time this, the variable can reset before the player has velocity applied in the jump pad region. -->
+        <filter>
+            <all>
+                <after duration="1s">
+                    <not>
+                        <region id="jump-pads"/>
+                    </not>
+                </after>
+                <after duration="0.2s">
+                    <grounded/>
+                </after>
+            </all>
+        </filter>
+        <kit>
+            <action scope="player">
+                <set var="fall_variable" value="0"/>
+            </action>
+        </kit>
+    </give>
+</kits>
+<variables>
+    <variable id="fall_variable" scope="player" default="0"/>
+</variables>
+<damage>
+    <deny>
+        <all>
+            <cause>fall</cause>
+            <variable var="fall_variable">1</variable>
+        </all>
+    </deny>
+</damage>
 </map>

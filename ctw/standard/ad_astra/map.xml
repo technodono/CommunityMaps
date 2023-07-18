@@ -1,6 +1,6 @@
 <map proto="1.4.2">
 <name>Ad Astra</name>
-<version>1.0.3</version>
+<version>1.0.14</version>
 <objective>Take the enemy's wool located near their base and place it back at your spawn!</objective>
 <created>2023-02-11</created>
 <maxbuildheight>30</maxbuildheight>
@@ -8,9 +8,9 @@
 <phase>development</phase>
 <authors>
     <author uuid="f610e558-a3c8-44fb-8622-68cc49dbc18f"/> <!-- Dawthon -->
-    <author uuid="9d4779a8-d35f-45d2-b51c-95de7a77e128" contribution="Map packaging and XML"/> <!-- zzuf -->
 </authors>
 <contributors>
+    <contributor uuid="9d4779a8-d35f-45d2-b51c-95de7a77e128" contribution="Map packaging and XML"/> <!-- zzuf -->
     <contributor uuid="ec5ec930-5cf3-4f8a-ad9f-09056aeed71b"/> <!-- Tundren -->
     <contributor uuid="6863869b-4b8c-4445-b778-a8e016775ae4"/> <!-- Cazadorian -->
     <contributor uuid="55cb168a-e28f-49e5-a853-8268093926c8"/> <!-- 0uzi -->
@@ -18,8 +18,8 @@
     <contributor uuid="d5a64b26-15ea-46c4-8319-f9c83e82a1fa"/> <!-- Eliminate -->
 </contributors>
 <teams>
-    <team id="red-team" color="dark red" max="24">Red</team>
-    <team id="blue-team" color="blue" max="24">Blue</team>
+    <team id="red-team" color="dark red" max="28">Red</team>
+    <team id="blue-team" color="blue" max="28">Blue</team>
 </teams>
 <spawns>
     <spawn team="red-team" kit="spawn-kit">
@@ -44,8 +44,8 @@
         <item slot="0" material="iron sword" unbreakable="true"/>
         <item slot="1" material="bow" enchantment="infinity" unbreakable="true"/>
         <item slot="2" material="iron pickaxe" enchantment="dig speed" unbreakable="true"/>
-        <item slot="3" material="iron axe" enchantment="dig speed:2" unbreakable="true"/>
-        <item slot="4" material="iron spade" enchantment="dig speed" unbreakable="true"/>
+        <item slot="3" material="iron axe" enchantment="dig speed" unbreakable="true"/>
+        <item slot="4" material="iron spade" unbreakable="true"/>
         <item slot="5" material="wood" amount="64"/>
         <item slot="6" material="glass" amount="32"/>
         <item slot="7" material="bucket"/>
@@ -55,7 +55,7 @@
         <item slot="32" material="wood" amount="64"/>
         <helmet material="leather helmet" team-color="true" unbreakable="true"/>
         <chestplate material="leather chestplate" team-color="true" unbreakable="true"/>
-        <leggings material="chainmail leggings" enchantment="protection projectile:2" unbreakable="true"/>
+        <leggings material="chainmail leggings" enchantment="protection projectile" unbreakable="true"/>
         <boots material="leather boots" team-color="true" unbreakable="true"/>
         <effect duration="2s" amplifier="255">damage resistance</effect>
     </kit>
@@ -83,18 +83,25 @@
     <deny id="deny-blue">
         <team id="only-blue">blue-team</team>
     </deny>
-    <blocks region="wool-rooms" id="only-wool-room">
-        <any>
-            <material>air</material>
-            <material>web</material>
-        </any>
-    </blocks>
+    <all id="only-wool-room">
+        <blocks region="wool-room-blocks">
+            <any>
+                <material>air</material>
+                <material>web</material>
+            </any>
+        </blocks>
+        <filter id="deny-void"/>
+    </all>
     <any id="allowed-spawn">
         <material id="only-iron">iron block</material>
         <material>stationary water</material>
+        <material>water</material>
     </any>
     <material id="only-air">air</material>
-    <time id="msg-waterlane">43m</time>
+    <all id="msg-waterlane">
+        <time>43m</time>
+        <filter id="no-water-lanes"/> <!-- If waterlanes were forced via commands before this, there won't be a bossbar -->
+    </all>
     <after id="water-lane-time" message="`9Water `9Lanes `fwill `fappear `fin {0}" duration="2m" filter="msg-waterlane"/>
     <variable id="no-water-lanes" var="water_lanes">0</variable>
 </filters>
@@ -102,7 +109,7 @@
     <!-- Void -->
     <union id="middle">
         <complement id="red-mid">
-            <rectangle min="-41,-67" max="-184,-115"/>
+            <rectangle min="-43,-67" max="-184,-115"/>
             <rectangle id="east-void" min="-55,-67" max="-94,-101"/>
             <mirror region="east-void" origin="-113.5,0,-61.5" normal="1,0,0"/>
         </complement>
@@ -124,7 +131,7 @@
     </union>
     <negative id="void-area">
         <region id="middle"/>
-        <region id="wool-rooms"/>
+        <region id="wool-room-blocks"/>
         <region id="spawn-areas"/>
         <region id="water-lanes"/>
     </negative>
@@ -148,10 +155,15 @@
     <apply block-place="deny-players" block-break="allowed-spawn" region="spawn-areas" message="You may not modify spawn areas!"/>
     <apply enter="deny-blue" region="red-spawn-area" message="You may not enter your enemies' spawn!"/>
     <apply enter="deny-red" region="blue-spawn-area" message="You may not enter your enemies' spawn!"/>
+    <!-- Water pools -->
+    <union id="water-pools">
+        <cuboid min="-116,19,43" max="-111,18,40"/>
+        <cuboid min="-111,19,-166" max="-116,18,-163"/>
+    </union>
     <!-- Wool rooms -->
     <union id="wool-rooms">
         <union id="red-wool-rooms">
-            <cuboid id="orange-wool-room" min="-195,0,-213" max="-220,128,-190"/>
+            <rectangle id="orange-wool-room" min="-195,-213" max="-220,-190"/>
             <mirror id="yellow-wool-room" region="orange-wool-room" origin="-113.5,0,-61.5" normal="1,0,0"/>
         </union>
         <union id="blue-wool-rooms">
@@ -159,9 +171,19 @@
             <mirror id="pink-wool-room" region="yellow-wool-room" origin="-113.5,0,-61.5" normal="0,0,1"/>
         </union>
     </union>
+    <union id="wool-room-blocks">
+        <union id="red-wool-room-blocks">
+            <cuboid id="orange-wool-room-blocks" min="-195,11,-213" max="-220,47,-190"/>
+            <mirror id="yellow-wool-room-blocks" region="orange-wool-room-blocks" origin="-113.5,0,-61.5" normal="1,0,0"/>
+        </union>
+        <union id="blue-wool-room-blocks">
+            <mirror id="purple-wool-room-blocks" region="orange-wool-room-blocks" origin="-113.5,0,-61.5" normal="0,0,1"/>
+            <mirror id="pink-wool-room-blocks" region="yellow-wool-room-blocks" origin="-113.5,0,-61.5" normal="0,0,1"/>
+        </union>
+    </union>
     <apply block="deny-red" region="red-wool-rooms" message="You may not modify the wool room!"/>
     <apply block="deny-blue" region="blue-wool-rooms" message="You may not modify the wool room!"/>
-    <apply block="only-wool-room" region="wool-rooms" message="You may not modify the wool room!"/>
+    <apply block="only-wool-room" region="wool-room-blocks" message="You may not modify the wool room!"/>
     <apply enter="only-blue" region="red-wool-rooms" message="You may not enter your team's wool room!"/>
     <apply enter="only-red" region="blue-wool-rooms" message="You may not enter your team's wool room!"/>
     <point id="purple-wool-spawner">-210.5,21.2,78.5</point>
@@ -211,6 +233,7 @@
     <action id="create-water-lanes" scope="match" expose="true">
         <fill region="water-lanes-y0" material="water" filter="only-air"/>
         <set var="water_lanes" value="1"/>
+        <message text=" `e⚠ `bWater lanes have appeared!"/>
     </action>
     <trigger filter="water-lane-time" action="create-water-lanes" scope="match"/>
 </actions>
@@ -247,6 +270,7 @@
 </toolrepair>
 <renewables>
     <renewable region="spawn-areas" renew-filter="only-iron"/>
+    <renewable region="water-pools" rate="0.5" sound="false" particles="false"/>
 </renewables>
 <block-drops>
     <rule>

@@ -1,10 +1,8 @@
 <map proto="1.4.2">
 <name>Voodoo</name>
-<version>1.0</version>
+<version>1.0.2</version>
 <objective>Leak lava from the enemy core and destroy the enemy monuments!</objective>
 <created>2023-01-29</created>
-<time result="objectives">30m</time>
-<phase>development</phase>
 <maxbuildheight>25</maxbuildheight>
 <authors>
     <author uuid="fe3608b7-d105-4029-8800-34b3147065b6"/> <!-- rockymine -->
@@ -35,7 +33,7 @@
     </default>
 </spawns>
 <kits>
-    <kit id="spawn-kit" parents="default-kit">
+    <kit id="spawn-kit">
         <clear/>
         <item slot="0" material="iron sword" unbreakable="true"/>
         <item slot="1" material="bow" enchantment="infinity" unbreakable="true"/>
@@ -51,9 +49,6 @@
         <leggings material="chainmail leggings" unbreakable="true"/>
         <boots material="leather boots" team-color="true" unbreakable="true"/>
         <effect duration="2s" amplifier="255">damage resistance</effect>
-    </kit>
-    <kit id="default-kit">
-        <effect duration="oo">night vision</effect>
     </kit>
 </kits>
 <filters>

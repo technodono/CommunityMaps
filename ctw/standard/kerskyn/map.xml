@@ -1,17 +1,15 @@
 <map proto="1.4.0">
 <name>Kerskyn</name>
-<version>1.0.0</version>
+<version>1.0.3</version>
 <objective>Capture both of the enemies wools</objective>
-<time result="objectives">30m</time>
-<phase>development</phase>
 <!-- Map authors & contributors. -->
 <authors>
     <author uuid="b03360db-b8cd-49de-8ba1-b7920c2238a9" contribution="Mapmaking and XML"/> <!-- Obelistics -->
     <author uuid="924c4e61-57b6-4931-afdb-6525b2ed34c0" contribution="Mapmaking"/> <!-- OAF6 -->
 </authors>
 <contributors>
-    <contributor  uuid="63ddf58a-ba2c-4d39-8481-6358bb46c63a" contribution="Feedback"/> <!-- samschaap -->
-    <contributor  uuid="621b2aa8-4e5f-4ed8-bd36-0ae2f8952a06" contribution="Feedback"/> <!-- Strangey -->
+    <contributor uuid="63ddf58a-ba2c-4d39-8481-6358bb46c63a" contribution="Feedback"/> <!-- samschaap -->
+    <contributor uuid="621b2aa8-4e5f-4ed8-bd36-0ae2f8952a06" contribution="Feedback"/> <!-- Strangey -->
 </contributors>
 <!-- Map modules, i.e. objectives, regions, spawns. -->
 <teams>
@@ -29,6 +27,7 @@
         <item slot="4" amount="48" damage="2" material="wood"/>
         <item slot="5" amount="32" material="stained clay" team-color="true"/>
         <item slot="6" material="golden apple" amount="1"/>
+        <item slot="7" unbreakable="true" material="shears"/>
         <item slot="8" material="water bucket" amount="1"/>
         <item slot="28" material="arrow"/>
         <item slot="29" unbreakable="true" material="iron spade"/>
@@ -109,9 +108,9 @@
                 <material>stone</material>
                 <material>cobblestone</material>
                 <material>log</material>
-                <material>SPRUCE_FENCE</material>
-                <material>WOOD_STEP</material>
-                <material>WOOD_DOUBLE_STEP</material>
+                <material>spruce fence</material>
+                <material>wood step</material>
+                <material>wood double step</material>
             </any>
             <void/>
         </all>
@@ -179,10 +178,6 @@
         </drops>
     </rule>
 </block-drops>
-<!-- Stop boat crafting -->
-<crafting>
-    <disable>boat</disable>
-</crafting>
 <!-- Spawners -->
 <spawners>
     <spawner spawn-region="gapple-spawner" player-region="gapple-trigger" delay="4s">
@@ -212,7 +207,7 @@
 <itemremove>
     <item>leather helmet</item>
     <item>leather chestplate</item>
-    <item>iron leggings</item>
+    <item>chainmail leggings</item>
     <item>leather boots</item>
     <item>yellow flower</item>
     <item>red rose</item>
@@ -222,6 +217,7 @@
     <item>glass</item>
     <item>string</item>
     <item>sapling</item>
+    <item>boat</item>
 </itemremove>
 <block-drops>
     <rule>
@@ -242,6 +238,7 @@
     <item>iron pickaxe</item>
     <item>iron axe</item>
     <item>iron spade</item>
+    <item>shears</item>
     <item>arrow</item>
     <item>golden apple</item>
     <item>wood</item>
