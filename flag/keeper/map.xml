@@ -1,0 +1,234 @@
+<map proto="1.4.2">
+<name>Keeper</name>
+<version>1.2.3</version>
+<objective>Capture the flag at the goal on the enemies side!</objective>
+<created>2022-01-07</created>
+<time result="score" overtime="1m" max-overtime="2m">12m</time>
+<authors>
+    <author uuid="c31e94b2-7678-4551-847e-989c1423323a"/> <!-- TommyHillfigger -->
+    <author uuid="fe3608b7-d105-4029-8800-34b3147065b6"/> <!-- rockymine -->
+</authors>
+<contributors>
+    <contributor uuid="ec5ec930-5cf3-4f8a-ad9f-09056aeed71b"/> <!-- Tundren -->
+    <contributor uuid="f1ff7ecc-2e79-4320-85de-adb392eb2822"/> <!-- DerStiv -->
+    <contributor uuid="6863869b-4b8c-4445-b778-a8e016775ae4"/> <!-- Cazadorian -->
+</contributors>
+<rules>
+    <rule>Fall damage is disabled!</rule>
+</rules>
+<gamemode>ffb</gamemode>
+<broadcasts>
+    <tip after="0m" every="1m">The goal you need to score in is on the `c`nenemies'`r side!</tip>
+    <tip after="2s" every="1m">When a team scores, all players will be teleported to their spawns!</tip>
+    <tip after="10s" every="2m">Use the side portals to switch sides!</tip>
+    <tip after="20s" every="3m">Every team has 2 `6"defence sniper bows"`b!</tip>
+</broadcasts>
+<teams>
+    <team id="red-team" color="dark red" max="16">Red</team>
+    <team id="blue-team" color="blue" max="16">Blue</team>
+</teams>
+<kits>
+    <kit id="default-kit">
+        <effect>night vision</effect>
+    </kit>
+    <kit id="spawn-kit" parents="default-kit">
+        <clear/>
+        <item slot="0" unbreakable="true" material="stone sword"/>
+        <item slot="1" unbreakable="true" material="bow"/>
+        <item slot="2" amount="4" material="leaves" name="`6Body Block"/>
+        <item slot="8" amount="20" material="arrow"/>
+        <helmet unbreakable="true" team-color="true" material="leather helmet"/>
+        <chestplate unbreakable="true" team-color="true" material="leather chestplate"/>
+        <leggings unbreakable="true" material="chainmail leggings">
+            <enchantment>projectile_protection</enchantment>
+        </leggings>
+        <boots unbreakable="true" material="iron boots"/>
+    </kit>
+    <kit id="speed">
+        <effect amplifier="3">speed</effect>
+    </kit>
+</kits>
+<spawns>
+    <spawn team="red-team" kit="spawn-kit" yaw="-90">
+        <region>
+            <cuboid id="red-spawn-point" min="-31.5,17,145.5" max="-29.5,17,143.5"/>
+        </region>
+    </spawn>
+    <spawn team="blue-team" kit="spawn-kit" yaw="90">
+        <region>
+            <cuboid id="blue-spawn-point" min="142.5,17,143.5" max="140.5,17,145.5"/>
+        </region>
+    </spawn>
+    <default kit="default-kit" yaw="-90">
+        <regions>
+            <point>52.5,65,144.5</point>
+        </regions>
+    </default>
+</spawns>
+<respawn auto="true" delay="5s"/>
+<regions>
+    <union id="nets">
+        <cuboid id="blue_net" min="132,6,112" max="126,15,177"/> <!-- where red scores -->
+        <cuboid id="red_net" min="-21,6,177" max="-15,15,112"/> <!-- where blue scores -->
+    </union>
+    <union id="sides">
+        <rectangle id="red-side" min="34, 183" max="-14,-105"/>
+        <rectangle id="blue-side" min="76, 105" max="124,183"/>
+    </union>
+    <union id="speedlanes">
+        <cuboid id="north-lane" min="-21,17,93" max="132,20,99"/>
+        <cuboid id="south-lane" min="-21,17,189" max="132,20,195"/>
+        <cuboid id="westleft-lane" min="-17,17,141" max="-21,20,99"/>
+        <cuboid id="westright-lane" min="-17,17,147" max="-21,20,189"/>
+        <cuboid id="eastleft-lane" min="127,17,147" max="132,20,189"/>
+        <cuboid id="eastright-lane" min="127,17,141" max="132,20,99"/>
+    </union>
+    <negative id="not-playing-field">
+        <region id="playing-field"/>
+    </negative>
+    <cuboid id="playing-field" min="-15,0,105" max="126,8,184"/>
+    <apply block="never" region="nets" message="You may not place blocks in the net"/>
+    <apply block="deny-void" region="playing-field" message="You may only place and break leaves on the playing field!"/>
+    <apply block="never" region="not-playing-field" message="You may not modify blocks over the void or off the playing field!"/>
+    <apply lend-kit="speed" region="speedlanes"/>
+    <apply enter="red-team-not-carrying-flag" region="blue_net" message="You may not enter this goal without a flag!"/>
+    <apply enter="blue-team-not-carrying-flag" region="red_net" message="You may not enter this goal without a flag!"/>
+    <apply enter="deny-red" region="red_net" message="You may not enter your own goal!"/>
+    <apply enter="deny-blue" region="blue_net" message="You may not enter your own goal!"/>
+</regions>
+<portals>
+    <portal x="@55.5" y="@6.5" z="@105.5">
+        <region>
+            <cuboid min="54,6,185" max="57,10,186"/>
+        </region>
+    </portal>
+    <portal x="@55.5" y="@6.5" z="@183.5">
+        <region>
+            <cuboid min="57,6,104" max="54,10,105"/>
+        </region>
+    </portal>
+    <portal destination="red-spawn-point" forward="should-tp" filter="only-red" yaw="@-90" pitch="@0"/>
+    <portal destination="blue-spawn-point" forward="should-tp" filter="only-blue" yaw="@90" pitch="@0"/>
+</portals>
+<proximity-alarms>
+    <proximity-alarm message="You are running towards the wrong goal!" flare-radius="0" region="red-side" detect="red-team-carrying-flag" notify="red-team-carrying-flag"/>
+    <proximity-alarm message="You are running towards the wrong goal!" flare-radius="0" region="blue-side" detect="blue-team-carrying-flag" notify="blue-team-carrying-flag"/>
+</proximity-alarms>
+<flags>
+    <flag id="flag" name="Flag" color="white" shared="true">
+        <post id="center-post" recover-time="10s" respawn-time="13s">
+            <block>55.5,11,144.5</block>
+        </post>
+        <net points="1" region="red_net" capture-filter="only-blue"/>
+        <net points="1" region="blue_net" capture-filter="only-red"/>
+    </flag>
+</flags>
+<filters>
+    <deny id="deny-red">
+        <team id="only-red">red-team</team>
+    </deny>
+    <deny id="deny-blue">
+        <team id="only-blue">blue-team</team>
+    </deny>
+    <all id="red-team-carrying-flag">
+        <team>red-team</team>
+        <carrying-flag>flag</carrying-flag>
+    </all>
+    <all id="blue-team-carrying-flag">
+        <team>blue-team</team>
+        <carrying-flag>flag</carrying-flag>
+    </all>
+    <deny id="red-team-not-carrying-flag">
+        <all>
+            <team>red-team</team>
+            <not>
+                <carrying-flag>flag</carrying-flag>
+            </not>
+        </all>
+    </deny>
+    <deny id="blue-team-not-carrying-flag">
+        <all>
+            <team>blue-team</team>
+            <not>
+                <carrying-flag>flag</carrying-flag>
+            </not>
+        </all>
+    </deny>
+    <all id="red-scored">
+        <filter id="only-red"/>
+        <region id="blue_net"/>
+        <match-running/>
+        <participating/>
+    </all>
+    <all id="blue-scored">
+        <filter id="only-blue"/>
+        <region id="red_net"/>
+        <match-running/>
+        <participating/>
+    </all>
+    <all id="deny-void">
+        <material id="leaves">leaves</material>
+        <not>
+           <void/>
+        </not>
+    </all>
+    <all id="should-tp">
+        <variable var="teleport_players">1</variable>
+        <participating/>
+        <match-running/>
+        <alive/>
+    </all>
+    <after id="shouldnt-tp" duration="0.1" filter="should-tp"/>
+</filters>
+<variables>
+    <variable id="teleport_players" scope="match" default="0"/>
+</variables>
+<actions>
+    <action id="teleport-players" scope="player">
+        <switch-scope outer="player" inner="match">
+            <set var="teleport_players" value="1"/>
+        </switch-scope>
+    </action>
+    <trigger filter="red-scored" action="teleport-players" scope="player"/>
+    <trigger filter="blue-scored" action="teleport-players" scope="player"/>
+    <action id="dont-teleport" scope="player">
+        <switch-scope outer="player" inner="match">
+            <set var="teleport_players" value="0"/>
+        </switch-scope>
+    </action>
+    <trigger filter="shouldnt-tp" action="dont-teleport" scope="player"/>
+</actions>
+<toolrepair>
+    <tool>stone sword</tool>
+    <tool>bow</tool>
+</toolrepair>
+<itemremove>
+    <item>leather helmet</item>
+    <item>leather chestplate</item>
+    <item>chainmail leggings</item>
+    <item>iron boots</item>
+    <item>leaves</item>
+    <item>sapling</item>
+</itemremove>
+<itemkeep>
+    <item>golden apple</item>
+    <item>arrow</item>
+</itemkeep>
+<kill-rewards>
+    <kill-reward>
+        <item material="golden apple"/>
+        <item material="arrow" amount="10"/>
+        <item material="leaves" amount="2" name="`6Body Block"/>
+    </kill-reward>
+</kill-rewards>
+<disabledamage>
+    <damage>fall</damage>
+</disabledamage>
+<hunger>
+    <depletion>off</depletion>
+</hunger>
+<score>
+    <mercy>4</mercy>
+</score>
+<maxbuildheight>8</maxbuildheight>
+</map>
