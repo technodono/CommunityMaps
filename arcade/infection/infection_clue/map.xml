@@ -1,12 +1,11 @@
 <map proto="1.4.2">
 <name>Infection: Clue</name>
-<version>1.1.2</version>
+<version>1.1.4</version>
 <created>2021-05-21</created>
 <include id="infection"/>
 <constants>
     <constant id="time-limit">4</constant>
-    <constant id="map-zombie-kit">seeker-kit</constant>
-    <constant id="map-human-kit">hiders-kit</constant>
+    <constant id="compass-distribution-time">3</constant>
 </constants>
 <authors>
     <author uuid="4979849b-1c14-46a9-ad9e-3bff3f387fe8"/> <!-- BlanchePanda -->
@@ -16,13 +15,13 @@
     <contributor uuid="a2ca96a1-aafb-4259-8602-ae6e4ccbe2cf" contribution="XML Help"/> <!-- archenswag9001 -->
 </contributors>
 <broadcasts>
-    <alert after="1s">Zombies are released after 20 seconds!</alert>
-    <alert after="20s">Zombies have been released!</alert>
+    <alert after="1s">${zombie-team-name} are released after 20 seconds!</alert>
+    <alert after="20s">${zombie-team-name} have been released!</alert>
 </broadcasts>
 <rules>
     <rule>Fall damage is off</rule>
-    <rule>Name tags of humans don't show</rule>
-    <rule>Zombies have speed I</rule>
+    <rule>${human-team-name} name tags don't show</rule>
+    <rule>${zombie-team-name} have Speed I</rule>
 </rules>
 <kits>
     <kit id="blindness">
@@ -35,8 +34,8 @@
         <chestplate locked="true" unbreakable="true" material="leather chestplate"/>
         <leggings locked="true" unbreakable="true" material="leather leggings"/>
         <boots locked="true" unbreakable="true" material="leather boots"/>
-        <effect duration="1s">blindness</effect>
-        <effect duration="oo" amplifier="1">speed</effect>
+        <effect duration="1">blindness</effect>
+        <effect>speed</effect>
     </kit>
     <kit id="hiders-kit">
         <game-mode>adventure</game-mode>
@@ -53,11 +52,11 @@
         <effect duration="1" amplifier="6">speed</effect>
     </kit>
     <kit id="give-speed" force="true">
-        <effect duration="oo" amplifier="6">speed</effect>
+        <effect amplifier="6">speed</effect>
     </kit>
 </kits>
 <spawns>
-    <spawn filter="before-20s" team="human-team" kit="${map-human-kit}" yaw="180" safe="true">
+    <spawn filter="before-20s" team="human-team" kit="hiders-kit" yaw="180" safe="true">
         <regions>
             <cuboid min="15.5,16,11.5" max="34.5,16.5,22.5"/>
         </regions>
@@ -73,7 +72,7 @@
             <cuboid min="15.5,16,11.5" max="34.5,16.5,22.5"/>
         </regions>
     </spawn>
-    <spawn filter="after-20s" team="zombie-team" kit="${map-zombie-kit}" yaw="180">
+    <spawn filter="after-20s" team="zombie-team" kit="seeker-kit" yaw="180">
         <regions>
             <cuboid min="24.5,95,16.5" max="25.5,95.5,17.5"/>
         </regions>
@@ -106,7 +105,7 @@
     <apply kit="clear-speed" region="map-without-tunnels"/> <!-- This gives speed 4 for 1 second once leaving tunnel regions, thus clearing the effect -->
 </regions>
 <modes show-before="20s">
-    <mode id="start-game" after="20s" material="air" name="The initial group of Zombies are being released"/>
+    <mode id="start-game" after="20s" material="air" name="The initial group of ${zombie-team-name} are being released"/>
 </modes>
 <destroyables name="cage" materials="glass" required="false" show="false" owner="human-team">
     <destroyable id="cage" modes="start-game">

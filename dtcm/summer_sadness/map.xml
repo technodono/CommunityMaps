@@ -1,6 +1,6 @@
 ﻿<map proto="1.4.2">
 <name>Summer Sadness</name>
-<version>1.0.5</version>
+<version>1.0.6</version>
 <objective>Destroy the enemy team's monument!</objective>
 <created>2022-01-07</created>
 <authors>
@@ -80,8 +80,8 @@
         <cuboid id="orange-iron" min="-38,3,-24" max="-27,10,-13"/>
     </union>
     <union id="monuments">
-        <cuboid id="yellow-monument" min="51,20,16" max="55,23,19"/>
-        <cuboid id="orange-monument" min="-51,20,16" max="-55,23,19"/>
+        <cuboid id="yellow-monument" min="52,20,16" max="55,23,19"/>
+        <cuboid id="orange-monument" min="-51,20,16" max="-54,23,19"/>
     </union>
     <apply block="never" region="spawns" message="You may not edit the spawns!"/>
     <apply block="deny-void" message="You may not edit the void!"/>
@@ -139,6 +139,7 @@
     <item>leather leggings</item>
     <item>leather boots</item>
     <item>emerald block</item>
+    <item>gold block</item>
     <item>string</item>
     <item>glowstone dust</item>
     <item>cactus</item>

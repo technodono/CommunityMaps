@@ -1,0 +1,25 @@
+<map proto="1.4.2">
+<name>TNT Tag: Block Fortress</name>
+<version>1.1.1</version>
+<include id="tnt-tag"/>
+<authors>
+    <author uuid="2a289d2a-d970-49c5-9a6c-01fc0264e317"/> <!-- Stealth5061 -->
+    <author uuid="ef4ea031-998f-4ec9-b7b6-1bdd428bcef8"/> <!-- Plastix -->
+</authors>
+<spawns>
+    <spawn region="center" kit="hider-kit" angle="0,3.5,0"/>
+    <default yaw="180">
+        <regions>
+            <cuboid min="-2,23,-48" max="2,23,-52"/>
+        </regions>
+    </default>
+</spawns>
+<regions>
+    <cylinder id="center" base="0,2,0" radius="3" height="1"/>
+    <apply leave="never">
+        <region>
+            <rectangle min="-32,-32" max="32,32"/>
+        </region>
+    </apply>
+</regions>
+</map>
