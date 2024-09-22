@@ -1,6 +1,6 @@
 <map proto="1.4.2">
 <name>Dirt &#38; Glory: Guardian of the Hill</name>
-<version>1.0.1</version>
+<version>1.0.7</version>
 <objective>Be the first team to reach 500 points under 10 minutes, or the Guardians will win.</objective>
 <created>2024-09-18</created>
 <gamemode>koth</gamemode>
@@ -66,8 +66,8 @@
         <boots unbreakable="true" material="iron boots"/>
         <effect duration="2s" amplifier="255">resistance</effect>
         <walk-speed>0.6</walk-speed>
-        <knockback-reduction>0.6</knockback-reduction>
-        <shield health="10" delay="4s"/>
+        <knockback-reduction>0.7</knockback-reduction>
+        <shield health="10" delay="3s"/>
         <potion duration="oo" amplifier="1" ambient="true">slow</potion>
     </kit>
 </kits>
@@ -102,7 +102,12 @@
         <cylinder id="red-spawn-protection" base="-51.5,14,-70.5" radius="12" height="7"/>
         <cylinder id="hill-zone-protection" base="31.5,4,-97.5" radius="6" height="6"/>
     </union>
-    <cylinder id="larger-hill" base="31.5,0,-97.5" radius="20" height="35"/>
+    <union id="larger-hill">
+        <cylinder id="larger-hill-cylinder" base="31.5,0,-97.5" radius="20" height="100"/>
+        <cylinder id="largest-cylinder" base="54.5,0,-120.5" radius="48" height="100"/>
+        <rectangle id="first-rectangle" min="13,-87" max="63,-129"/>
+        <rectangle id="second-rectangle" min="21,-79" max="63,-129"/>
+    </union>
     <rectangle id="game-area" min="-65,0" max="55,-120"/>
     <negative id="outside-game-area">
         <region id="game-area"/>
@@ -157,10 +162,10 @@
     <item>31</item>
     <item>32</item>
     <item>111</item>
-</itemremove>
-<itemkeep>
     <item>stone sword</item>
     <item>bow</item>
+</itemremove>
+<itemkeep>
     <item>golden apple</item>
     <item>arrow</item>
 </itemkeep>
@@ -189,7 +194,7 @@
                 <team>green</team>
             </all>
         </filter>
-        <item amount="2" material="arrow"/>
+        <item amount="3" material="arrow"/>
     </kill-reward>
 </kill-rewards>
 <hunger>
