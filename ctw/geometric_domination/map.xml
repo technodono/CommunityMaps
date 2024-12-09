@@ -1,0 +1,330 @@
+<map proto="1.4.2">
+<name>Geometric Domination</name>
+<version>1.2.2</version>
+<gamemode>ctw</gamemode>
+<created>2023-01-21</created>
+<maxbuildheight>22</maxbuildheight>
+<objective>Collect the enemy's wool and return it to your monument!</objective>
+<authors>
+    <author uuid="1aad55f7-2dea-4f22-85ca-ad9de3a78609" contribution="Map author and creator"/> <!-- Technodono -->
+</authors>
+<teams>
+    <team id="blue" color="blue" max="20">Cuboids</team>
+    <team id="red" color="red" max="20">Spheroids</team>
+</teams>
+<rules>
+    <rule>Water is restricted for cannoning only!</rule>
+</rules>
+<broadcasts>
+    <tip after="0m" every="2m">`e⚠  `7There's a TNT spawner in the center of the map!</tip>
+</broadcasts>
+<spawns>
+    <spawn team="blue" kit="spawn-kit" yaw="-135">
+        <regions>
+            <point>26.5,7,69.5</point>
+        </regions>
+    </spawn>
+    <spawn team="red" kit="spawn-kit" yaw="45">
+        <regions>
+            <point>-18.5,7,-96.5</point>
+        </regions>
+    </spawn>
+    <default kit="default-kit">
+        <regions yaw="-90">
+            <point>-60.5,26,-12.5</point>
+        </regions>
+    </default>
+</spawns>
+<kits>
+    <kit id="default-kit">
+        <effect>night vision</effect>
+    </kit>
+    <kit id="spawn-kit" parent="default-kit">
+        <item slot="0" name="`6Prism Blade" unbreakable="true" material="iron sword"/>
+        <item slot="1" unbreakable="true" material="bow">
+            <enchantment>infinity</enchantment>
+        </item> 
+        <item slot="2" name="`9`oMaxi-Miner 2000" unbreakable="true" material="diamond pickaxe">
+            <enchantment>dig_speed</enchantment>
+        </item>
+        <item slot="3" name="`7`oLog-Matic 3000" unbreakable="true" material="iron axe">
+            <enchantment>dig_speed</enchantment>
+        </item>
+        <item slot="4" team-color="true" amount="64" material="stained clay"/>
+        <item slot="31" team-color="true" amount="64" material="stained clay"/>
+        <item slot="22" team-color="true" amount="64" material="stained clay"/>
+        <item slot="5" amount="16" lore="`7Blast resistant!|`7A good choice for a TNT absorbing wall." material="ender stone"/>
+        <item slot="17" material="arrow"/>
+        <item slot="32" amount="2" material="sponge"/>
+        <item slot="6" material="golden apple"/>
+        <helmet team-color="true" unbreakable="true" material="leather helmet"/>
+        <leggings unbreakable="true" material="chainmail leggings"/>
+        <chestplate color="4C4C4C" unbreakable="true" material="leather chestplate"/>
+        <boots color="4C4C4C" unbreakable="true" material="leather boots"/>
+        <effect duration="2s" amplifier="25">heal</effect>
+        <effect duration="2s" amplifier="25">damage resistance</effect>
+        <!-- Important! gamemode -->
+        <game-mode>survival</game-mode>
+    </kit>
+    <kit id="woolroom-gear" force="true">
+        <leggings unbreakable="true" material="diamond leggings">
+            <enchantment>projectile_protection</enchantment>
+        </leggings>
+        <effect>regeneration</effect>
+    </kit>
+</kits>
+<filters>
+    <deny id="deny-red">
+        <team id="only-red">red</team>
+    </deny>
+    <deny id="deny-blue">
+        <team id="only-blue">blue</team>
+    </deny>
+    <deny id="deny-void">
+        <void/>
+    </deny>
+    <deny id="not-chest">
+        <any>
+            <material>chest</material>
+            <material>trapped chest</material>
+            <material>tripwire</material>
+            <material>mob spawner</material>
+            <material>gold plate</material>
+        </any>
+    </deny>
+    <deny id="deny-water-bucket">
+        <material id="water-bucket">water bucket</material>
+    </deny>
+    <deny id="deny-water">
+        <material id="water">water</material>
+    </deny>
+    <blocks id="woolroom-blocks" region="all-wool-rooms">
+        <any>
+            <material>air</material>
+            <material>cobble wall</material>
+        </any>
+    </blocks>
+    <deny id="blast-proof">
+        <all>
+            <cause>explosion</cause>
+            <material>glass</material>
+        </all>
+    </deny>
+</filters>
+<regions>
+<!-- Regions -->
+    <negative id="void-area">
+        <rectangle id="blue-void" min="41,53" max="-20,-10"/>
+        <rectangle id="red-void" min="-33,-15" max="28,-80"/>
+        <rectangle min="-20,-16" max="28,-1"/>
+    </negative>
+    <complement id="spawn-areas">
+        <union>
+            <rectangle id="blue-spawn-area" min="37,75" max="22,53"/>
+            <rectangle id="red-spawn-area" min="-14,-80" max="-29,-102"/>
+        </union>
+        <region id="victory-monuments"/>
+    </complement>
+    <!-- Areas -->
+    <union id="all-wool-rooms">
+        <cuboid id="purple-woolroom" min="15,0,-117" max="28,100,-135"/>
+        <cuboid id="silver-woolroom" min="-7,0,90" max="-20,100,108"/>
+    </union>
+    <union id="all-wool-rooms-entrances">
+        <cylinder id="purple-woolroom-entrance" base="23.5,11,-121.5" radius="3.4" height="6"/>
+        <cylinder id="silver-woolroom-entrance" base="-15.5,11,94.5" radius="3.4" height="6"/>
+    </union>
+    <cylinder id="purple-wool-spawner-player-region" base="20.5,11,-127.5" radius="3" height="8"/>
+    <cylinder id="silver-wool-spawner-player-region" base="-12.5,11,100.5" radius="3" height="8"/>
+    <negative id="not-all-wool-lanes">
+        <union id="all-wool-lanes">
+            <rectangle id="blue-wool-lane" min="-7,56" max="-20,90"/>
+            <rectangle id="red-wool-lane" min="15,-83" max="28,-117"/>
+        </union>
+    </negative>
+    <union id="all-wool-walls">
+        <union id="red-wool-walls">
+            <cuboid min="15,0,-117" max="28,1,-83"/>
+            <cuboid min="28,0,-100" max="15,11,-103"/>
+        </union>
+        <mirror id="blue-wool-walls" normal="0,0,1" origin="4,0,-13">
+            <mirror normal="1,0,0" origin="4,0,-13">
+                <region id="red-wool-walls"/>
+            </mirror>
+        </mirror>
+    </union>
+    <cuboid id="tnt-spawner-player-region" min="16,11,-6" max="-8,14,-19"/>
+    <!-- Points -->
+    <point id="silver-wool-spawner">-12.5,11.5,100.5</point>
+    <point id="purple-wool-spawner">20.5,11.5,-127.5</point>
+    <union id="victory-monuments">
+        <block id="silver-wool-monument">-20,8,-88</block>
+        <block id="purple-wool-monument">27,8,60</block>
+    </union>
+    <block id="tnt-spawner-point-ne">8,11,-15</block>
+    <block id="tnt-spawner-point-se">11,11,-12</block>
+    <block id="tnt-spawner-point-sw">-1,11,-12</block>
+    <block id="tnt-spawner-point-nw">-4,11,-15</block>
+    <!-- Rules Applied (order is important!) -->
+    <apply block="deny-blue" region="silver-woolroom"/>
+    <apply block="deny-red" region="purple-woolroom"/>
+    <apply block="woolroom-blocks" region="all-wool-rooms"/>
+    <apply block="never" region="all-wool-walls" message="You may not break the &quot;bedrock&quot; walls!"/>
+    <apply block-break="not-chest"/>
+    <apply enter="only-red" region="silver-woolroom" message="You may not enter you own woolroom!"/>
+    <apply enter="only-blue" region="purple-woolroom" message="You may not enter you own woolroom!"/>
+    <apply kit="woolroom-gear" region="all-wool-rooms-entrances"/>
+    <apply block="never" region="spawn-areas" message="You may not modify spawn areas!"/>
+    <apply enter="only-blue" region="blue-spawn-area" message="You may not enter your enemy's spawn area!"/>
+    <apply enter="only-red" region="red-spawn-area" message="You may not enter your enemy's spawn area!"/>
+    <apply block="deny-void" region="void-area" message="You may not modify the void area!"/>
+    <apply block-break="blast-proof"/>
+</regions>
+<!--  Spawners  -->
+<spawners>
+    <spawner spawn-region="silver-wool-spawner" player-region="silver-wool-spawner-player-region" delay="3s" max-entities="10">
+        <item material="wool" damage="8"/>
+        <item material="golden apple"/>
+    </spawner>
+    <spawner spawn-region="purple-wool-spawner" player-region="purple-wool-spawner-player-region" delay="3s" max-entities="10">
+        <item material="wool" damage="10"/>
+        <item material="golden apple"/>
+    </spawner>
+    <spawner spawn-region="tnt-spawner-point-ne" player-region="tnt-spawner-player-region" delay="6s">
+        <item amount="16" material="tnt"/>
+        <item amount="4" material="redstone torch on"/>
+    </spawner>
+    <spawner spawn-region="tnt-spawner-point-nw" player-region="tnt-spawner-player-region" delay="6s">
+        <item amount="16" material="tnt"/>
+        <item amount="4" material="redstone torch on"/>
+    </spawner>
+    <spawner spawn-region="tnt-spawner-point-se" player-region="tnt-spawner-player-region" delay="6s">
+        <item amount="16" material="tnt"/>
+        <item amount="4" material="redstone torch on"/>
+    </spawner>
+    <spawner spawn-region="tnt-spawner-point-sw" player-region="tnt-spawner-player-region" delay="6s">
+        <item amount="16" material="tnt"/>
+        <item amount="4" material="redstone torch on"/>
+    </spawner>
+</spawners>
+<toolrepair>
+    <tool>iron sword</tool>
+    <tool>iron axe</tool>
+    <tool>diamond pickaxe</tool>
+    <tool>bow</tool>
+</toolrepair>
+<itemremove>
+    <item>arrow</item>
+    <item>leather helmet</item>
+    <item>leather chestplate</item>
+    <item>chainmail leggings</item>
+    <item>leather boots</item>
+    <item>ender stone</item>
+    <item>stained clay</item>
+    <item>hard clay</item>
+    <item>string</item>
+    <item>skull item</item>
+    <item>wood step</item>
+    <item>wood double step</item>
+    <item>step</item>
+    <item>double step</item>
+    <item>string</item>
+    <item>dark oak fence</item>
+    <item>spruce fence</item>
+    <item>beacon</item>
+    <item>wood button</item>
+    <item>wood</item>
+    <item>log</item>
+    <item>log 2</item>
+    <item>smooth stairs</item>
+    <item>spruce wood stairs</item>
+    <item>dark oak stairs</item>
+    <item>melon</item>
+    <item>quartz block</item>
+    <item>gold plate</item>
+    <item>sponge</item>
+    <item>glowstone dust</item>
+    <item>trap door</item>
+    <item>daylight detector</item>
+    <item>daylight detector inverted</item>
+</itemremove>
+<itemkeep>
+    <item>golden apple</item>
+</itemkeep>
+<item-mods>
+    <rule>
+        <match>
+            <material>tnt</material>
+        </match>
+        <modify lore="`cTNT only deals damage to:|`7- Self|`7- Terrain"/>
+    </rule>
+</item-mods>
+<timelock>on</timelock>
+<disabledamage>
+    <damage ally="true" self="false" enemy="true" other="false">block explosion</damage>
+</disabledamage>
+<hunger>
+    <depletion>off</depletion>
+</hunger>
+<kill-rewards>
+    <kill-reward>
+        <item material="golden apple"/>
+        <item amount="4" lore="`7Blast resistant!|`7A good choice for a TNT absorbing wall." material="ender stone"/>
+        <item amount="16" team-color="true" material="stained clay"/>
+        <item amount="8" material="ender stone" lore="`7Blast resistant!|`7A good choice for a TNT absorbing wall."/>
+    </kill-reward>
+</kill-rewards>
+<!-- map regen -->
+<renewables>
+    <renewable interval="12s" grow="true" particles="false" sound="false" avoid-players="2">
+        <region>
+            <cuboid id="regen-area" min="40,0,-83" max="-40,100,56"/>
+            <cuboid id="red-redstone-supply" min="-3,0,-84" max="4,100,-91"/>
+            <cuboid id="blue-redstone-supply" min="11,0,57" max="4,100,64"/>
+        </region>
+        <renew-filter>
+        <not>
+            <any>
+                <material>tnt</material>
+                <material>redstone torch on</material>
+                <material>redstone torch off</material>
+                <material>air</material>
+            </any>
+        </not>
+        </renew-filter>
+        <replace-filter>
+            <not>
+                <any>
+                    <material>fence:0</material>
+                    <material>wood step:1</material>
+                    <material>step:5</material>
+                    <material>wood double step:1</material>
+                    <material>double step:5</material>
+                    <material>redstone wire</material>
+                    <material>redstone block</material>
+                    <material>ender stone</material>
+                    <material>ladder</material>
+                    <material>water</material>
+                    <material>stationary water</material>
+                    <material>stone plate</material>
+                    <material>stone button</material>
+                    <material>lever</material>
+                    <material>diode</material>
+                    <material>furnace</material>
+                    <material>burning furnace</material>
+                    <material>cobble wall</material>
+                    <material>tnt</material>
+                </any>
+            </not>
+        </replace-filter>
+    </renewable>
+</renewables>
+<!-- Red wools -->
+<wools team="red">
+    <wool color="silver" location="-12.5,11,100.5" monument="silver-wool-monument"/>
+</wools>
+<!-- Blue wools -->
+<wools team="blue">
+    <wool color="purple" location="20.5,11,-127.5" monument="purple-wool-monument"/>
+</wools>
+</map>

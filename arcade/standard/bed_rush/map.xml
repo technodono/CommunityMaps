@@ -1,6 +1,9 @@
 <map proto="1.4.2">
 <name>Bed Rush</name>
-<version>1.0.3</version>
+<game>Bed Rush</game>
+<version>1.0.7</version>
+<include id="gapple-kill-reward"/>
+<include id="void-death"/>
 <objective>Destroy the Bed to win the Round. First Team to 5 Wins!</objective>
 <created>2024-07-01</created>
 <authors>
@@ -30,10 +33,7 @@
     <doDaylightCycle>false</doDaylightCycle>
 </gamerules>
 <maxbuildheight>21</maxbuildheight>
-<!-- prefered gamemode is "bedrush" displayed as "Bed Rush" -->
-<gamemode>bridge</gamemode>
-<gamemode>bedwars</gamemode>
-<respawn auto="true" delay="0s"/>
+<respawn auto="true" delay="2.5s"/>
 <constants>
     <constant id="score-limit">5</constant>
     <constant id="red-team-spawn">0.5,21,-38.5</constant>
@@ -41,10 +41,12 @@
     <constant id="running">0</constant>
     <constant id="resetting">1</constant>
     <constant id="over">2</constant>
+    <constant id="void-plane">0</constant>
+    <constant id="health">1</constant>
 </constants>
 <broadcasts>
-    <alert after="1s" filter="red-only">`7`lDestroy the Blue Team's Bed!</alert>
-    <alert after="1s" filter="blue-only">`7`lDestroy the Red Team's Bed!</alert>
+    <alert after="1s" filter="red-only">`6`lRound `e1`7`l — Destroy the Blue Team's Bed!</alert>
+    <alert after="1s" filter="blue-only">`6`lRound `e1`7`l — Destroy the Red Team's Bed!</alert>
     <tip after="15s">`7`lThe map will reset after each round!</tip>
     <alert after="9m">`7If neither team wins 5 rounds the match will end in `c`l3 minutes`7!</alert>
 </broadcasts>
@@ -55,25 +57,21 @@
 <kits>
     <kit id="spawn-kit">
         <clear/>
-        <item material="iron sword" enchantment="sharpness:1" unbreakable="true"/>
-        <item material="iron pickaxe" enchantment="efficiency:1" unbreakable="true"/>
-        <item material="iron axe" enchantment="efficiency:1" unbreakable="true"/>
-        <item material="golden apple" amount="8"/>
-        <item material="sandstone" damage="2" amount="64"/>
-        <item material="sandstone" damage="2" amount="64"/>
-        <item material="sandstone" damage="2" amount="64"/>
-        <item material="sandstone" damage="2" amount="64"/>
-        <item material="wood" amount="64"/>
+        <item slot="0" material="iron sword" enchantment="sharpness:1" unbreakable="true"/>
+        <item slot="1" material="iron pickaxe" enchantment="efficiency:1" unbreakable="true"/>
+        <item slot="2" material="iron axe" enchantment="efficiency:1" unbreakable="true"/>
+        <item slot="3" material="golden apple" amount="8"/>
+        <item slot="4" material="sandstone" damage="2" amount="64"/>
+        <item slot="5" material="sandstone" damage="2" amount="64"/>
+        <item slot="6" material="sandstone" damage="2" amount="64"/>
+        <item slot="7" material="sandstone" damage="2" amount="64"/>
+        <item slot="8" material="wood" amount="64"/>
         <effect duration="6s" amplifier="255">resistance</effect>
         <helmet material="leather helmet" enchantment="protection:2" team-color="true" unbreakable="true" locked="true"/>
         <chestplate material="leather chestplate" enchantment="protection:3" team-color="false" unbreakable="true" locked="true"/>
         <leggings material="leather leggings" enchantment="protection:2" team-color="true" unbreakable="true" locked="true"/>
         <boots material="leather boots" enchantment="protection:3;feather_falling:1" team-color="true" unbreakable="true" locked="true"/>
         <health>20</health>
-    </kit>
-    <kit id="void-death" force="true">
-        <clear effects="true" items="false" armor="false"/>
-        <health>1</health>
     </kit>
     <give filter="all(resetting,alive)">
         <kit>
@@ -84,6 +82,12 @@
         </kit>
     </give>
     <give filter="resetting-kit" kit="spawn-kit"/>
+    <give filter="naked" kit="spawn-kit"/>
+    <kit id="bed-breaker-kit" force="true">
+        <action>
+            <set var="bed_breaker" value="1"/>
+        </action>
+    </kit>
 </kits>
 <damage>
     <deny>
@@ -94,9 +98,15 @@
         </all>
     </deny>
 </damage>
+<block-drops>
+    <rule kit="bed-breaker-kit">
+        <filter>
+            <material>bed block</material>
+        </filter>
+    </rule>
+</block-drops>
 <filters>
     <alive id="alive"/>
-    <participating id="participating"/>
     <match-running id="match-running"/>
     <deny id="deny-red">
         <team id="red-only">red-team</team>
@@ -104,6 +114,17 @@
     <deny id="deny-blue">
         <team id="blue-only">blue-team</team>
     </deny>
+    <all id="naked">
+        <alive/>
+        <match-running/>
+        <variable var="round_state">${running}</variable>
+        <region id="above-void"/>
+        <not>
+            <wearing ignore-metadata="true">
+                <item material="leather helmet"/>
+            </wearing>
+        </not>
+    </all>
     <all id="resetting">
         <match-running/>
         <variable var="round_state">${resetting}</variable>
@@ -116,7 +137,8 @@
     <after id="countdown" filter="all(resetting,match-running)" duration="2.8s"/>
     <after id="resetting-kit" filter="all(resetting,alive,match-running)" duration="1.8s"/>
     <after id="should-tp" filter="all(resetting,match-running)" duration="1.85s"/>
-    <after id="turn-on-fall-damage" filter="running" duration="5s"/>
+    <!-- prevents shared fall damage when many players land together at start -->
+    <after id="turn-on-fall-damage" filter="running" duration="7s"/>
     <any id="red-bed-broke">
         <offset vector="0,10,-41">
             <material>air</material>
@@ -157,6 +179,7 @@
     <variable id="round_state" scope="match" default="${running}"/> <!-- running state, skip cages first round -->
     <variable id="fall_damage" scope="match" default="0"/>
     <variable id="scoring_team" scope="team" default="0" exclusive="1"/>
+    <variable id="bed_breaker" scope="player" exclusive="1"/>
     <score id="team_score"/>
 </variables>
 <actions>
@@ -182,7 +205,6 @@
     <action id="bad-sounds" scope="team">
         <sound key="mob.enderdragon.growl" volume="1" pitch="1"/>
         <sound key="mob.enderdragon.growl" volume="1" pitch=".9"/>
-        <sound key="mob.enderdragon.growl" volume="1" pitch=".8"/>
         <sound preset="objective_bad" volume=".3" pitch="1"/>
     </action>
     <!-- Winning message shown to all: observers, red and blue teams -->
@@ -190,7 +212,10 @@
         <action>
             <message fade-in="0.5s" stay="3s" fade-out="0.5s">
                 <title>`9BLUE SCORED!!</title>
-                <subtitle>`9Blue team won the round</subtitle>
+                <subtitle>`9Red Bed broken by {player}</subtitle>
+                <replacements>
+                    <player id="player" var="bed_breaker"/>
+                </replacements>
             </message>
             <message text="`6`lThe Blue team won the round!"/>
             <switch-scope inner="team" filter="blue-only">
@@ -202,7 +227,10 @@
         <action>
             <message fade-in="0.5s" stay="3s" fade-out="0.5s">
                 <title>`cRED SCORED!!</title>
-                <subtitle>`6Red team won the round</subtitle>
+                <subtitle>`cBlue Bed broken by {player}</subtitle>
+                <replacements>
+                    <player id="player" var="bed_breaker"/>
+                </replacements>
             </message>
             <message text="`6`lThe Red team won the round!"/>
             <switch-scope inner="team" filter="red-only">
@@ -333,8 +361,8 @@
 </structures>
 <regions>
     <!-- course boundaries -->
-    <below id="void" y="0"/>
-    <above y="23" id="ceiling"/>
+    <above y="0" id="above-void"/>
+    <above y="24" id="ceiling"/>
     <union id="no-go">
         <cuboid id="zone-1a" min="12,23,20" max="13,1,44"/>
         <cuboid id="zone-1b" min="12,23,-43" max="13,1,-19"/>
@@ -370,7 +398,6 @@
     <apply block-place="never" region="bed-blue"/>
     <apply block-break="deny-red" region="bed-red" message="You may not break your own bed!"/>
     <apply block-break="deny-blue" region="bed-blue" message="You may not break your own bed!"/>
-    <apply kit="void-death" region="void"/>
 </regions>
 <portals sound="false" observers="never">
     <portal destination="red-team-spawn-point" forward="all(should-tp,alive)" filter="red-only" yaw="@0" pitch="@0"/>
@@ -395,7 +422,6 @@
 </itemremove>
 <kill-rewards>
     <kill-reward>
-        <item material="golden apple"/>
         <item material="wood" amount="16"/>
         <item material="sandstone" damage="2" amount="16"/>
     </kill-reward>
