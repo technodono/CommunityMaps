@@ -1,6 +1,6 @@
 <map proto="1.5.0" game="Arcade">
 <name>Tic Tac K.O.</name>
-<version>1.0.9</version>
+<version>1.2.1</version>
 <phase>staging</phase>
 <created>2024-10-30</created>
 <objective>Claim 3 tiles in a row to win!</objective>
@@ -15,10 +15,12 @@
     <contributor uuid="5986da63-a546-49c5-812d-d5c41a42510a" contribution="BlockBlock design inspiration"/> <!-- Lyzak  -->
     <contributor uuid="2b7f4dfc-8711-4f07-8347-c5e8873d2189" contribution="Wooly Woods design inspiration"/> <!-- kp10708  -->
     <contributor uuid="340ffc4d-d41a-49b1-b772-3834fd91a3b1" contribution="Wooly Woods design inspiration"/> <!-- JoeltheMole  -->
+    <contributor uuid="459fd919-0d58-401a-9601-6cab1eb721ab" contribution="Sky Traffic design inspiration"/> <!-- Reshif -->
+    <contributor uuid="9d4779a8-d35f-45d2-b51c-95de7a77e128" contribution="Bridge kit"/> <!-- zzuf -->
 </contributors>
 <constants>
-    <constant id="platform_count">10</constant>
-    <constant id="kit_count">10</constant>
+    <constant id="platform_count">14</constant>
+    <constant id="kit_count">12</constant>
     <constant id="off">0</constant>
     <constant id="on">1</constant>
     <constant id="team_none">-1</constant>
@@ -204,9 +206,41 @@
         <item slot="34" material="mushroom soup" consumable="soup"/>
         <item slot="35" material="mushroom soup" consumable="soup"/>
     </kit>
+    <kit id="kit-10" parent="reset-effects"> <!-- bridge -->
+        <item slot="0" material="iron sword" unbreakable="true"/>
+        <item slot="1" material="bow" unbreakable="true" lore="`e⚠ `cYou can only hold `f1`c arrow at a time!|`9ⓘ `7Get a new one `f3.5 seconds `7after shooting!"/>
+        <item slot="2" amount="2" material="golden apple" consumable="bridge-apple" prevent-sharing="true" lore="`9ⓘ `7Instantly restores to `c20 HP`7!|`9ⓘ `7Grants `eAbsorption`7 for `f1 minute`7!"/>
+        <helmet material="leather helmet" unbreakable="true" team-color="true"/>
+        <chestplate material="leather chestplate" unbreakable="true" team-color="true"/>
+    </kit>
+    <kit id="kit-11" parent="reset-effects" force="true"> <!-- uhc -->
+        <foodlevel>16</foodlevel>
+        <item slot="0" material="iron sword">
+            <enchantment level="2">damage all</enchantment>
+        </item>
+        <item slot="1" material="bow">
+            <enchantment>arrow damage</enchantment>
+        </item>
+        <helmet material="iron helmet">
+            <enchantment>protection environmental</enchantment>
+        </helmet>
+        <chestplate material="iron chestplate">
+            <enchantment>protection environmental</enchantment>
+        </chestplate>
+        <leggings material="iron leggings">
+            <enchantment>protection environmental</enchantment>
+        </leggings>
+        <boots material="iron boots">
+            <enchantment>protection environmental</enchantment>
+        </boots>
+        <item slot="2" material="golden apple" amount="3" consumable="uhc-gapple"/>
+        <item slot="8" material="arrow" amount="16"/>
+    </kit>
 </kits>
 <consumables>
     <consumable id="soup" action="soup-eat" on="click" override="true" consume="true"/>
+    <consumable id="bridge-apple" action="bridge-apple-eat" on="eat" override="true"/>
+    <consumable id="uhc-gapple" action="uhc-gapple-eat" on="eat" override="false"/>
 </consumables>
 <kill-rewards>
     <kill-reward filter="current_kill_reward=1">
@@ -223,7 +257,7 @@
     <cuboid id="voting-pit" min="-6,9,-26" size="33,8,33"/>
     <cuboid id="voting-pit-above" min="-4,18,-24" size="29,2,29"/>
     <cuboid id="voting-pit-barrier" min="-5,17,-25" size="31,1,31"/>
-    <cuboid id="fighting-zone" min="-4,11,-24" size="27,20,27"/>
+    <cuboid id="fighting-zone" min="-5,11,-25" size="31,20,31"/>
     <below id="in-void" y="-10"/>
     <!--
       starting from north west corner
@@ -260,6 +294,10 @@
     <cuboid id="reg-platform-7" min="-4,84,-24" size="29,6,29"/>
     <cuboid id="reg-platform-8" min="-4,91,-24" size="29,5,29"/>
     <cuboid id="reg-platform-9" min="-4,97,-24" size="29,8,29"/>
+    <cuboid id="reg-platform-10" min="-4,106,-24" size="29,13,29"/>
+    <cuboid id="reg-platform-11" min="-4,121,-24" size="29,5,29"/>
+    <cuboid id="reg-platform-12" min="-4,126,-24" size="29,5,29"/>
+    <cuboid id="reg-platform-13" min="-4,131,-24" size="29,5,29"/>
     <union id="x-firework">
         <union id="x-firework-south">
             <block location="1,18,15"/>
@@ -273,8 +311,6 @@
     <apply region="map" block-break="deny-player" block-place="deny-player" use="deny-player" block-physics="deny-lava"/>
 </regions>
 <filters>
-    <team id="only-x">x-team</team>
-    <team id="only-o">o-team</team>
     <not id="deny-player">
         <cause>player</cause>
     </not>
@@ -323,11 +359,15 @@
         </not>
         <filter id="not(any(captured[0]=0, captured[1]=0, captured[2]=0, captured[3]=0, captured[4]=0, captured[5]=0, captured[6]=0, captured[7]=0, captured[8]=0))"/>
     </all>
+    <effect id="has-absorption">absorption</effect>
+    <carrying id="has-arrow" ignore-metadata="true"><item material="arrow"/></carrying>
+    <variable id="even-spaces-captured" scope="match" value="max(captured_count, 1) % 2">0</variable>
 </filters>
 <variables scope="match" default="0">
     <score id="score"/>
     <with-team id="x_score" var="score" team="x-team"/>
     <with-team id="o_score" var="score" team="o-team"/>
+    <variable id="captured_count"/>
     <array id="captured" size="9"/>
     <array id="votes" size="9"/>
     <array id="kits" size="${kit_count}"/>
@@ -347,6 +387,7 @@
     <variable id="tmp"/>
     <variable id="calc"/>
     <variable id="i"/>
+    <variable id="gamerule_alternate_vote"/>
 </variables>
 <actions>
     <!--
@@ -355,7 +396,7 @@
     <trigger scope="match" filter="match-started">
         <action>
             <message text="`7[`6Arena Master`7] `6Tirion`r: Welcome to `aTic Tac K.O.`r!"/>
-            <sound key="mob.villager.haggle"/>
+            <sound key="${entity.villager.trade}"/>
             <set var="timelimit" value="-1"/>
         </action>
     </trigger>
@@ -365,7 +406,7 @@
         </filter>
         <action>
             <message text="`7[`6Arena Master`7] `6Tirion`r: Each round you will face off against the opposing team in an `aepic duel`r!"/>
-            <sound key="mob.villager.haggle"/>
+            <sound key="${entity.villager.trade}"/>
         </action>
     </trigger>
     <trigger scope="match">
@@ -373,8 +414,13 @@
             <time>6s</time>
         </filter>
         <action>
-            <message text="`7[`6Arena Master`7] `6Tirion`r: The winning team will then `avote `ron which grid space to claim!"/>
-            <sound key="mob.villager.haggle"/>
+            <action filter="gamerule_alternate_vote=0">
+                <message text="`7[`6Arena Master`7] `6Tirion`r: The winning team will then `avote `ron which grid space to claim!"/>
+            </action>
+            <action filter="gamerule_alternate_vote=1">
+                <message text="`7[`6Arena Master`7] `6Tirion`r: The winning team will then `avote `ron which grid space to claim first, then the losing team will vote second!"/>
+            </action>
+            <sound key="${entity.villager.trade}"/>
         </action>
     </trigger>
     <trigger scope="match">
@@ -383,7 +429,7 @@
         </filter>
         <action>
             <message text="`7[`6Arena Master`7] `6Tirion`r: The first team to claim `athree spaces in a row `rwill win the game!"/>
-            <sound key="mob.villager.haggle"/>
+            <sound key="${entity.villager.trade}"/>
             <set var="state" value="${state_duel_cd}"/>
         </action>
     </trigger>
@@ -399,7 +445,7 @@
                     <decimal id="0" value="round"/>
                 </replacements>
             </message>
-            <sound key="mob.villager.haggle"/>
+            <sound key="${entity.villager.trade}"/>
         </action>
     </trigger>
     <trigger scope="match">
@@ -408,9 +454,9 @@
         </filter>
         <action>
             <message text="`7[`6Arena Master`7] `6Tirion`r: The arena for this round will be..."/>
-            <sound key="mob.villager.haggle"/>
+            <sound key="${entity.villager.trade}"/>
             <action id="platform-picker"/>
-            <action id="platform-applicator"/>
+            <action id="platform-announcer"/>
         </action>
     </trigger>
     <trigger scope="match">
@@ -419,7 +465,7 @@
         </filter>
         <action>
             <message text="`7[`6Arena Master`7] `6Tirion`r: And the kit you will be using is..."/>
-            <sound key="mob.villager.haggle"/>
+            <sound key="${entity.villager.trade}"/>
             <action id="kit-picker"/>
             <action id="kit-applicator"/>
             <set var="announce" value="${off}"/>
@@ -431,19 +477,18 @@
         </filter>
         <action>
             <message text="`7[`6Arena Master`7] `6Tirion`r: May the best team win!"/>
-            <sound key="mob.villager.haggle"/>
+            <sound key="${entity.villager.trade}"/>
             <fill region="voting-pit-barrier" material="air" filter="material-barrier"/>
             <fill region="x-firework" material="stone"/>
             <fill region="o-firework" material="stone"/>
             <set var="x_currently_voting" value="${team_none}"/>
             <set var="o_currently_voting" value="${team_none}"/>
-            <action id="platform-applicator"/>
             <action id="kit-applicator"/>
             <action id="clear-dropped-lobby-entities"/>
-            <switch-scope inner="player" filter="only-x">
+            <switch-scope inner="player" filter="x-team">
                 <teleport x="1.5" y="18.5" z="-9.5" yaw="-90"/>
             </switch-scope>
-            <switch-scope inner="player" filter="only-o">
+            <switch-scope inner="player" filter="o-team">
                 <teleport x="19.5" y="18.5" z="-9.5" yaw="90"/>
             </switch-scope>
             <set var="state" value="${state_duel}"/>
@@ -473,13 +518,13 @@
         <set var="overtime" value="0"/>
         <set var="x_currently_voting" value="${team_none}"/>
         <set var="o_currently_voting" value="${team_none}"/>
-        <switch-scope inner="player" observers="true" filter="any(observing, all(only-x, next_voter=${team_x}), all(only-o, next_voter=${team_o}))">
+        <switch-scope inner="player" observers="true" filter="any(observing, all(x-team, next_voter=${team_x}), all(o-team, next_voter=${team_o}))">
             <sound preset="OBJECTIVE_GOOD"/>
             <action filter="participating">
                 <message text="{ translate: 'broadcast.gameOver.teamWon', color: 'green' }"/>
             </action>
         </switch-scope>
-        <switch-scope inner="player" filter="any(all(only-x, next_voter=${team_o}), all(only-o, next_voter=${team_x}))">
+        <switch-scope inner="player" filter="any(all(x-team, next_voter=${team_o}), all(o-team, next_voter=${team_x}))">
             <sound preset="OBJECTIVE_BAD"/>
             <message text="{ translate: 'broadcast.gameOver.teamLost', color: 'red' }"/>
         </switch-scope>
@@ -511,19 +556,29 @@
             <action filter="calc=1..">
                 <!-- x has more alive players -->
                 <set var="next_voter" value="${team_x}"/>
-                <message text="`7[`6Arena Master`7] `6Tirion`r: `9Crosses `rhave the most players left alive so they win this round!"/>
+                <message text="`7[`6Arena Master`7] `6Tirion`r: `9Crosses `rhave the most players left alive (`9{1} `rvs `4{0}`r) so they win this round!">
+                    <replacements>
+                        <decimal id="0" value="o_currently_voting"/>
+                        <decimal id="1" value="x_currently_voting"/>
+                    </replacements>
+                </message>
             </action>
             <action filter="calc=..-1">
                 <!-- o has more alive players -->
                 <set var="next_voter" value="${team_o}"/>
-                <message text="`7[`6Arena Master`7] `6Tirion`r: `4Naughts `rhave the most players left alive so they win this round!"/>
+                <message text="`7[`6Arena Master`7] `6Tirion`r: `4Naughts `rhave the most players left alive (`4{0} `rvs `9{1}`r) so they win this round!">
+                    <replacements>
+                        <decimal id="0" value="o_currently_voting"/>
+                        <decimal id="1" value="x_currently_voting"/>
+                    </replacements>
+                </message>
             </action>
             <set var="overtime" value="2"/>
         </action>
         <action filter="overtime=0">
             <message text="`7[`6Arena Master`7] `6Tirion`r: Overtime! Which means..."/>
             <message text="`7[`6Arena Master`7] `6Tirion`r: The team with the most players alive after `a30 seconds`r will win!"/>
-            <sound key="ambient.weather.thunder"/>
+            <sound key="${entity.lightning_bolt.thunder}"/>
             <set var="overtime" value="1"/>
         </action>
         <action filter="overtime=2">
@@ -539,6 +594,38 @@
         <filter>
             <after duration="30s" filter="all(match-running, state=${state_duel}, overtime=1)" message="{ translate: 'misc.overtime', with: ['{0}'] }"/>
         </filter>
+    </trigger>
+    <trigger scope="match">
+        <filter>
+            <pulse duration="0.5s" period="1s" filter="all(match-running, state=${state_duel}, overtime=1)"/>
+        </filter>
+        <action>
+            <set var="calc" value="x_currently_voting - o_currently_voting"/>
+            <action filter="calc=0">
+                <message actionbar="`b{0} `4Naughts `r`bvs `b{1} `9Crosses">
+                    <replacements>
+                        <decimal id="0" value="o_currently_voting"/>
+                        <decimal id="1" value="x_currently_voting"/>
+                    </replacements>
+                </message>
+            </action>
+            <action filter="calc=1..">
+                <message actionbar="`a{1} `9Crosses `bvs `c{0} `4Naughts">
+                    <replacements>
+                        <decimal id="0" value="o_currently_voting"/>
+                        <decimal id="1" value="x_currently_voting"/>
+                    </replacements>
+                </message>
+            </action>
+            <action filter="calc=..-1">
+                <message actionbar="`a{0} `4Naughts `r`bvs `c{1} `9Crosses">
+                    <replacements>
+                        <decimal id="0" value="o_currently_voting"/>
+                        <decimal id="1" value="x_currently_voting"/>
+                    </replacements>
+                </message>
+            </action>
+        </action>
     </trigger>
     <trigger scope="match" filter="all(match-running, state=${state_vote_cd})">
         <action>
@@ -562,7 +649,7 @@
             </action>
             <action id="start-next-vote"/>
             <switch-scope inner="team" filter="currently_voting=1">
-                <sound key="random.orb" volume="1" pitch="1.2"/>
+                <sound key="${entity.experience_orb.pickup}" volume="1" pitch="1.2"/>
                 <message text="`7`oFrom `6Tirion`r: Stand on the space which you want to claim. The available space with the most teammates on it will be claimed by your team!"/>
             </switch-scope>
             <fill region="x-firework" material="stone"/>
@@ -643,57 +730,21 @@
         </repeat>
         <set var="current_platform" value="top"/>
     </action>
-    <action id="platform-applicator" scope="match">
-        <action filter="current_platform=0">
-            <action filter="announce=1">
-                <message text="`7[`6Arena Master`7] `6Tirion`r: `cIncendiary`r!"/>
-            </action>
-        </action>
-        <action filter="current_platform=1">
-            <action filter="announce=1">
-                <message text="`7[`6Arena Master`7] `6Tirion`r: `3Mushroom`r!"/>
-            </action>
-        </action>
-        <action filter="current_platform=2">
-            <action filter="announce=1">
-                <message text="`7[`6Arena Master`7] `6Tirion`r: `2Forest`r!"/>
-            </action>
-        </action>
-        <action filter="current_platform=3">
-            <action filter="announce=1">
-                <message text="`7[`6Arena Master`7] `6Tirion`r: `6Desert`r!"/>
-            </action>
-        </action>
-        <action filter="current_platform=4">
-            <action filter="announce=1">
-                <message text="`7[`6Arena Master`7] `6Tirion`r: `8Constellation`r!"/>
-            </action>
-        </action>
-        <action filter="current_platform=5">
-            <action filter="announce=1">
-                <message text="`7[`6Arena Master`7] `6Tirion`r: `6Arid`r!"/>
-            </action>
-        </action>
-        <action filter="current_platform=6">
-            <action filter="announce=1">
-                <message text="`7[`6Arena Master`7] `6Tirion`r: `dCharge`r!"/>
-            </action>
-        </action>
-        <action filter="current_platform=7">
-            <action filter="announce=1">
-                <message text="`7[`6Arena Master`7] `6Tirion`r: `cHeat`r!"/>
-            </action>
-        </action>
-        <action filter="current_platform=8">
-            <action filter="announce=1">
-                <message text="`7[`6Arena Master`7] `6Tirion`r: `eBlock`r!"/>
-            </action>
-        </action>
-        <action filter="current_platform=9">
-            <action filter="announce=1">
-                <message text="`7[`6Arena Master`7] `6Tirion`r: `eWooly`r!"/>
-            </action>
-        </action>
+    <action id="platform-announcer" scope="match">
+        <action filter="current_platform=0"><message text="`7[`6Arena Master`7] `6Tirion`r: `cIncendiary`r!"/></action>
+        <action filter="current_platform=1"><message text="`7[`6Arena Master`7] `6Tirion`r: `3Mushroom`r!"/></action>
+        <action filter="current_platform=2"><message text="`7[`6Arena Master`7] `6Tirion`r: `2Forest`r!"/></action>
+        <action filter="current_platform=3"><message text="`7[`6Arena Master`7] `6Tirion`r: `6Desert`r!"/></action>
+        <action filter="current_platform=4"><message text="`7[`6Arena Master`7] `6Tirion`r: `8Constellation`r!"/></action>
+        <action filter="current_platform=5"><message text="`7[`6Arena Master`7] `6Tirion`r: `8Dust Bowl`r!"/></action>
+        <action filter="current_platform=6"><message text="`7[`6Arena Master`7] `6Tirion`r: `dCharge`r!"/></action>
+        <action filter="current_platform=7"><message text="`7[`6Arena Master`7] `6Tirion`r: `cHeat`r!"/></action>
+        <action filter="current_platform=8"><message text="`7[`6Arena Master`7] `6Tirion`r: `eBlocks`r!"/></action>
+        <action filter="current_platform=9"><message text="`7[`6Arena Master`7] `6Tirion`r: `dWooly`r!"/></action>
+        <action filter="current_platform=10"><message text="`7[`6Arena Master`7] `6Tirion`r: `5Ships`r!"/></action>
+        <action filter="current_platform=11"><message text="`7[`6Arena Master`7] `6Tirion`r: `eBeach`r!"/></action>
+        <action filter="current_platform=12"><message text="`7[`6Arena Master`7] `6Tirion`r: `3Frosty`r!"/></action>
+        <action filter="current_platform=13"><message text="`7[`6Arena Master`7] `6Tirion`r: `2Plains`r!"/></action>
     </action>
     <action id="kit-picker" scope="match">
         <set var="i" value="0"/>
@@ -793,6 +844,22 @@
                 <kit id="kit-9"/>
             </switch-scope>
         </action>
+        <action filter="current_kit=10">
+            <action filter="announce=1">
+                <message text="`7[`6Arena Master`7] `6Tirion`r: `3Bridge`r!"/>
+            </action>
+            <switch-scope inner="player" filter="alive">
+                <kit id="kit-10"/>
+            </switch-scope>
+        </action>
+        <action filter="current_kit=11">
+            <action filter="announce=1">
+                <message text="`7[`6Arena Master`7] `6Tirion`r: `cUHC`r!"/>
+            </action>
+            <switch-scope inner="player" filter="alive">
+                <kit id="kit-11"/>
+            </switch-scope>
+        </action>
     </action>
     <!--
     Utils
@@ -803,6 +870,33 @@
             <foodlevel>16</foodlevel>
         </kit>
     </action>
+    <action id="bridge-apple-eat" scope="player">
+        <action filter="not(has-absorption)">
+            <kit>
+                <effect duration="1m">absorption</effect>
+            </kit>
+        </action>
+        <kit>
+            <health>20</health>
+        </kit>
+    </action>
+    <action id="uhc-gapple-eat" scope="player">
+        <kit force="true">
+            <foodlevel>16</foodlevel>
+        </kit>
+    </action>
+    <trigger scope="player">
+        <filter>
+            <after duration="3.5s" filter="all(match-running, participating, state=${state_duel}, current_kit=10, not(has-arrow))"/>
+        </filter>
+        <action>
+            <sound key="${entity.item.pickup}" pitch="0.8"/>
+            <message text=" `e⚠ `aYou got an arrow!" actionbar="`a`lARROW READY!"/>
+            <kit>
+                <item slot="8" material="arrow" lore="`e⚠ `cYou can only hold `f1`c arrow at a time!|`9ⓘ `7Get a new one `f3.5 seconds `7after shooting!" prevent-sharing="true"/>
+            </kit>
+        </action>
+    </trigger>
     <action id="clear-dropped-lobby-entities" scope="match">
         <kill-entities filter="all(map, clearable-entities)"/>
     </action>
@@ -918,6 +1012,7 @@
             </action>
             <set var="i" value="i + 1"/>
         </repeat>
+        <set var="captured_count" value="captured_count + 1"/>
     </action>
     <trigger scope="match">
         <filter>
@@ -934,12 +1029,18 @@
             <action filter="next_voter=${team_x}">
                 <fill region="x-firework" material="redstone block"/>
             </action>
-            <set var="next_voter" value="${team_none}"/>
-            <set var="x_currently_voting" value="${team_none}"/>
-            <set var="o_currently_voting" value="${team_none}"/>
-            <sound key="dig.cloth"/>
+            <sound key="${block.wool.break}"/>
             <sound preset="OBJECTIVE_FIREWORKS_FAR"/>
-            <set var="state" value="${state_duel_cd}"/>
+            <action filter="any(gamerule_alternate_vote=0, all(gamerule_alternate_vote=1, even-spaces-captured))">
+                <set var="next_voter" value="${team_none}"/>
+                <set var="x_currently_voting" value="${team_none}"/>
+                <set var="o_currently_voting" value="${team_none}"/>
+                <set var="state" value="${state_duel_cd}"/>
+            </action>
+            <action filter="all(gamerule_alternate_vote=1, not(even-spaces-captured))">
+                <action id="switch-voter"/>
+                <set var="state" value="${state_vote_cd}"/>
+            </action>
         </action>
     </trigger>
     <trigger scope="player" filter="all(match-running, alive, state=${state_duel}, not(fighting-zone))">
@@ -953,6 +1054,55 @@
             <teleport x="player.x" y="9" z="player.z"/>
         </action>
     </trigger>
+    <trigger scope="player" observers="true">
+        <filter>
+            <all>
+                <cylinder base="10.5,19.5,-32.5" radius="1.5" height="2"/>
+                <observing/>
+            </all>
+        </filter>
+        <action filter="not(match-started)">
+            <sound key="${entity.experience_orb.pickup}" volume="1" pitch="1.2"/>
+            <message>
+                <text>{"text": "`7`oFrom `6Tirion`r: Psst, have you heard about the super secret settings? ","extra":[{"text":" [Let me see] ","clickEvent":{"action":"run_command","value":"/action trigger console-intro"},"color":"blue"}],"color": "white"}</text>
+            </message>
+        </action>
+    </trigger>
+    <action id="console-intro" scope="player" expose="true" filter="not(match-started)">
+        <sound key="${entity.experience_orb.pickup}" volume="1" pitch="1.2"/>
+        <message text="`7`oFrom `6Tirion`r: Use the controls below to modify the gamerules for this match."/>
+        <action id="console"/>
+    </action>
+    <action id="console" scope="player" expose="true" filter="not(match-started)">
+        <action filter="gamerule_alternate_vote=0">
+            <message>
+                <text>{"text":"","extra":[{"text":"Voting format: ", "color":"dark_aqua"},{"text":"Winner Only","clickEvent":{"action":"run_command","value":"/action trigger set-gamerule-alternate-vote-0"},"hoverEvent":{"action":"show_text","contents":{"text":"[Selected] Only the duel winner votes on a space to claim.","color":"aqua"}},"color":"green","underlined":true},{"text":", Alternating ","clickEvent":{"action":"run_command","value":"/action trigger set-gamerule-alternate-vote-1"},"hoverEvent":{"action":"show_text","contents":{"text":"The duel winner will vote on a space to claim first, then the loser.","color":"aqua"}},"color":"aqua"}],"color":"white"}</text>
+            </message>
+        </action>
+        <action filter="gamerule_alternate_vote=1">
+            <message>
+                <text>{"text":"","extra":[{"text":"Voting format: ", "color":"dark_aqua"},{"text":"Winner Only, ","clickEvent":{"action":"run_command","value":"/action trigger set-gamerule-alternate-vote-0"},"hoverEvent":{"action":"show_text","contents":{"text":"Only the duel winner votes on a space to claim.","color":"aqua"}},"color":"aqua"},{"text":"Alternating","clickEvent":{"action":"run_command","value":"/action trigger set-gamerule-alternate-vote-1"},"hoverEvent":{"action":"show_text","contents":{"text":"[Selected] The duel winner will vote on a space to claim first, then the loser.","color":"aqua"}},"color":"green","underlined":true}],"color":"white"}</text>
+            </message>
+        </action>
+    </action>
+    <action id="set-gamerule-alternate-vote-0" scope="player" expose="true">
+        <switch-scope inner="match">
+            <set var="gamerule_alternate_vote" value="0"/>
+            <message>
+                <text>{"text":"`7[`6Arena Master`7] `6Tirion`r: The voting rules for this match have been set to ","extra":[{"text":"Winner Only","color":"green","hoverEvent":{"action":"show_text","contents":{"text":"Only the duel winner votes on a space to claim.","color":"aqua"}}},{"text":"!"}],"color":"white"}</text>
+            </message>
+        </switch-scope>
+        <action id="console"/>
+    </action>
+    <action id="set-gamerule-alternate-vote-1" scope="player" expose="true">
+        <switch-scope inner="match">
+            <set var="gamerule_alternate_vote" value="1"/>
+            <message>
+                <text>{"text":"`7[`6Arena Master`7] `6Tirion`r: The voting rules for this match have been set to ","extra":[{"text":"Alternating Votes","color":"green","hoverEvent":{"action":"show_text","contents":{"text":"The duel winner will vote on a space to claim first, then the loser.","color":"aqua"}}},{"text":"!"}],"color":"white"}</text>
+            </message>
+        </switch-scope>
+        <action id="console"/>
+    </action>
 </actions>
 <structures update="false">
     <structure id="str-x-symbol" region="reg-x-symbol" origin="0,10,-10"/>
@@ -1009,6 +1159,10 @@
     <structure id="str-platform-7" region="reg-platform-7" origin="10,85,-10"/>
     <structure id="str-platform-8" region="reg-platform-8" origin="10,91,-10"/>
     <structure id="str-platform-9" region="reg-platform-9" origin="10,98,-10"/>
+    <structure id="str-platform-10" region="reg-platform-10" origin="10,110,-10"/>
+    <structure id="str-platform-11" region="reg-platform-11" origin="10,122,-10"/>
+    <structure id="str-platform-12" region="reg-platform-12" origin="10,127,-10"/>
+    <structure id="str-platform-13" region="reg-platform-13" origin="10,132,-10"/>
     <dynamic structure="str-platform-0" location="10,17,-10" trigger="all(state=${state_duel_and_cd}, current_platform=0)"/>
     <dynamic structure="str-platform-1" location="10,17,-10" trigger="all(state=${state_duel_and_cd}, current_platform=1)"/>
     <dynamic structure="str-platform-2" location="10,17,-10" trigger="all(state=${state_duel_and_cd}, current_platform=2)"/>
@@ -1019,6 +1173,10 @@
     <dynamic structure="str-platform-7" location="10,17,-10" trigger="all(state=${state_duel_and_cd}, current_platform=7)"/>
     <dynamic structure="str-platform-8" location="10,17,-10" trigger="all(state=${state_duel_and_cd}, current_platform=8)"/>
     <dynamic structure="str-platform-9" location="10,17,-10" trigger="all(state=${state_duel_and_cd}, current_platform=9)"/>
+    <dynamic structure="str-platform-10" location="10,17,-10" trigger="all(state=${state_duel_and_cd}, current_platform=10)"/>
+    <dynamic structure="str-platform-11" location="10,17,-10" trigger="all(state=${state_duel_and_cd}, current_platform=11)"/>
+    <dynamic structure="str-platform-12" location="10,17,-10" trigger="all(state=${state_duel_and_cd}, current_platform=12)"/>
+    <dynamic structure="str-platform-13" location="10,17,-10" trigger="all(state=${state_duel_and_cd}, current_platform=13)"/>
 </structures>
 <damage>
     <deny>
@@ -1036,6 +1194,7 @@
         </any>
     </deny>
 </damage>
+<modifybowprojectile pickup-filter="not(current_kit=10)"/>
 <hunger>
     <depletion>off</depletion>
 </hunger>
@@ -1066,6 +1225,7 @@
     <item>potion</item>
     <item>golden apple</item>
     <item>tnt</item>
+    <item>mushroom soup</item>
 </itemremove>
 <toolrepair>
     <tool>stone sword</tool>

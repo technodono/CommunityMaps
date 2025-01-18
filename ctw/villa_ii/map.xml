@@ -1,6 +1,6 @@
 <map proto="1.5.0">
 <name>Villa II</name>
-<version>1.2.4</version>
+<version>1.2.5</version>
 <variant id="halloween" world="halloween" override="true" slug="villa_ii_boo">Villa BOO</variant>
 <variant id="christmas" world="christmas" override="true">Chilla II</variant>
 <objective>Capture the enemy team's wool!</objective>
@@ -17,6 +17,7 @@
     <constant id="wood-damage">1</constant>
 </if>
 <include id="gapple-kill-reward"/>
+<include id="iron-bulkcrafting"/>
 <authors>
     <author uuid="d5a64b26-15ea-46c4-8319-f9c83e82a1fa"/> <!-- Eliminate -->
     <author uuid="ec5ec930-5cf3-4f8a-ad9f-09056aeed71b"/> <!-- Tundren -->
@@ -118,9 +119,6 @@
     </wool>
 </wools>
 <filters>
-    <deny id="deny-void">
-       <void/>
-    </deny>
     <deny id="deny-players">
         <participating/>
     </deny>
@@ -191,7 +189,7 @@
     <apply block="blue-in-wr" region="purple-wool-room" message="You may not break the wool rooms!"/>
     <apply block="red-in-wr" region="orange-wool-room" message="You may not break the wool rooms!"/>
     <apply block="never" region="gap-spawner-prot" message="You may not break the spawner!"/>
-    <apply block-place="deny-void" block-break="deny-void-break" region="void-area" message="You may not build in the void area!"/>
+    <apply block-place="deny(void)" block-break="deny-void-break" region="void-area" message="You may not build in the void area!"/>
     <apply block-break="only-iron" block-place="deny-players" region="spawn-protection" message="You may not modify the spawns!"/>
 </regions>
 <spawners>

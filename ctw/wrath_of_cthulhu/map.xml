@@ -1,7 +1,7 @@
 <map proto="1.5.0">
 <include id="gapple-kill-reward"/>
 <name>Wrath of Cthulhu</name>
-<version>1.0.5</version>
+<version>1.0.9</version>
 <objective>Capture the two wools of the enemy team!</objective>
 <created>2024-11-02</created>
 <phase>staging</phase>
@@ -9,6 +9,7 @@
     <author uuid="4011d739-4dfb-41f6-8e60-5179d035cab7" contribution="Map Author"/> <!-- MishM0sh -->
     <author uuid="b2539be1-8f98-4375-b653-9d91cd04c30e" contribution="Map Builder"/> <!-- Mewzzy -->
     <author uuid="d1c4b70c-e4df-4ed6-999a-2e959bdfdac7" contribution="Map Builder"/> <!-- HUDV -->
+    <author uuid="ec5ec930-5cf3-4f8a-ad9f-09056aeed71b" contribution="Map Builder"/> <!-- Tundren -->
 </authors>
 <contributors>
     <contributor uuid="430ec559-364a-4363-ac7a-2529050440ac" contribution="Map Feedback/XML"/> <!-- mameBT -->
@@ -16,20 +17,19 @@
     <contributor uuid="63ddf58a-ba2c-4d39-8481-6358bb46c63a" contribution="XML"/> <!-- samschaap -->
 </contributors>
 <teams>
-    <team id="red-team" color="red" max="28">Red</team>
-    <team id="blue-team" color="blue" max="28">Blue</team>
+    <team id="red-team" color="red" max="24">Red</team>
+    <team id="blue-team" color="blue" max="24">Blue</team>
 </teams>
 <kits>
     <kit id="spawn-kit">
         <clear/>
         <item slot="0" unbreakable="true" material="iron sword"/>
-        <item slot="1" unbreakable="true" material="bow"/>
-        <item slot="28" material="arrow" amount="32"/>
+        <item slot="1" material="bow" enchantment="infinity" unbreakable="true"/>
+        <item slot="28" material="arrow" amount="1"/>
         <item slot="2" unbreakable="true" enchantment="efficiency" material="iron pickaxe"/>
         <item slot="3" unbreakable="true" material="iron axe"/>
         <item slot="30" unbreakable="true" material="iron spade"/>
         <item slot="4" amount="64" material="wood"/>
-        <item slot="31" amount="32" material="wood"/>
         <item slot="5" amount="64" material="glass"/>
         <item slot="8" material="golden apple"/>
         <helmet unbreakable="true" team-color="true" material="leather helmet"/>
@@ -40,43 +40,65 @@
     </kit>
 </kits>
 <spawns>
-    <default>
-        <region yaw="180">
+    <default yaw="180">
+        <region>
             <cylinder base="0.5,101,0.5" radius="1" height="0"/>
         </region>
     </default>
-    <spawn team="red-team" kit="spawn-kit">
-        <region yaw="180">
-            <point>0.5,13,150.5</point>
+    <spawn team="red-team" kit="spawn-kit" yaw="180">
+        <region>
+            <point>0.5,13,142.5</point>
         </region>
     </spawn>
     <spawn team="blue-team" kit="spawn-kit">
-        <region yaw="0">
-            <point>0.5,13,-149.5</point>
+        <region>
+            <point>0.5,13,-141.5</point>
         </region>
     </spawn>
 </spawns>
 <filters>
     <blocks id="wool-room-blocks" region="wool-rooms">
-        <any>
-            <material>air</material>
-            <material>web</material>
-            <material>redstone wire</material>
-            <material>redstone torch on</material>
-        </any>
+        <not>
+            <any>
+                <material>air</material>
+                <material id="only-web">web</material>
+                <material>redstone wire</material>
+                <material>redstone torch on</material>
+            </any>
+        </not>
     </blocks>
-    <all id="only-red-wr">
-        <team id="only-red">red-team</team>
-        <filter id="wool-room-blocks"/>
-    </all>
-    <all id="only-blue-wr">
-        <team id="only-blue">blue-team</team>
-        <filter id="wool-room-blocks"/>
-    </all>
+    <deny id="deny-red">
+        <team>red-team</team>
+    </deny>
+    <deny id="deny-blue">
+        <team>blue-team</team>
+    </deny>
+    <deny id="deny-blue-some-red-all-wr">
+        <any>
+            <all>
+                <team id="only-blue">blue-team</team>
+                <filter id="wool-room-blocks"/>
+            </all>
+            <team>red-team</team>
+        </any>
+    </deny>
+    <deny id="deny-red-some-blue-all-wr">
+        <any>
+            <all>
+                <team id="only-red">red-team</team>
+                <filter id="wool-room-blocks"/>
+            </all>
+            <team>blue-team</team>
+        </any>
+    </deny>
     <all id="only-iron-renew">
         <material id="only-iron">iron block</material>
         <cause>world</cause>
     </all>
+    <material id="only-lime">wool:5</material>
+    <material id="only-light-blue">wool:3</material>
+    <material id="only-yellow">wool:4</material>
+    <material id="only-orange">wool:1</material>
     <deny id="deny-redstone">
         <material>redstone wire</material>
     </deny>
@@ -87,33 +109,39 @@
 <regions>
     <rectangle id="playable-space" min="-73,-174" max="73,174"/>
     <union id="spawns">
-        <rectangle id="red-spawn" min="-18,166" max="19,113"/>
-        <rectangle id="blue-spawn" min="19,-165" max="-18,-112"/>
+        <rectangle id="red-spawn" min="-18,161" max="19,98"/>
+        <rectangle id="blue-spawn" min="-18,-161" max="19,-97"/>
+    </union>
+    <union id="iron-zones">
+        <rectangle id="red-iron-1" min="8,161" max="19,98"/>
+        <rectangle id="red-iron-2" min="-7,161" max="-18,98"/>
+        <rectangle id="blue-iron-1" min="8,-161" max="19,-97"/>
+        <rectangle id="blue-iron-2" min="-7,-161" max="-18,-97"/>
     </union>
     <union id="wool-rooms">
         <union id="red-wool-rooms">  <!-- Blue capture, Red defend -->
-            <cuboid id="light-blue-wool-room" min="35,0,171" max="64,255,142"/>
-            <cuboid id="lime-wool-room" min="-63,0,171" max="-34,255,142"/>
+            <cuboid id="light-blue-wool-room" min="35,0,156" max="64,255,132"/>
+            <cuboid id="lime-wool-room" min="-63,0,156" max="-34,255,132"/>
         </union>
         <union id="blue-wool-rooms"> <!-- Red capture, Blue defend -->
-            <cuboid id="orange-wool-room" min="-34,0,-170" max="-63,255,-141"/>
-            <cuboid id="yellow-wool-room" min="64,0,-170" max="35,255,-141"/>
+            <cuboid id="orange-wool-room" min="-34,0,-155" max="-63,255,-131"/>
+            <cuboid id="yellow-wool-room" min="64,0,-155" max="35,255,-131"/>
         </union>
     </union>
     <union id="wool-room-to-spawn-walls">
-        <rectangle min="31,119" max="32,172"/> <!-- blue -->
-        <rectangle min="-32,119" max="-31,172"/> <!-- lime -->
-        <rectangle min="-32,-173" max="-31,-118"/> <!-- orange -->
-        <rectangle min="31,-173" max="32,-118"/> <!-- yellow -->
+        <rectangle min="31,111" max="32,164"/> <!-- blue -->
+        <rectangle min="-32,111" max="-31,164"/> <!-- lime -->
+        <rectangle min="-32,-165" max="-31,-110"/> <!-- orange -->
+        <rectangle min="31,-165" max="32,-110"/> <!-- yellow -->
     </union>
-    <union id="victory-monuments">
-        <cuboid min="-2,15,161" max="3,18,163"/>
-        <cuboid min="3,15,-160" max="-2,18,-162"/>
+    <union id="victory-monument-area">
+        <cuboid min="-1,15,153" max="3,18,155"/>
+        <cuboid min="3,15,-152" max="-1,18,-154"/>
     </union>
-    <point id="light-blue-wool-spawn">49.5,16,152.5</point>
-    <point id="lime-wool-spawn">-48.5,16,152.5</point>
-    <point id="orange-wool-spawn">-48.5,16,-151.5</point>
-    <point id="yellow-wool-spawn">49.5,16,-151.5</point>
+    <point id="light-blue-wool-spawn">49.5,16,144.5</point>
+    <point id="lime-wool-spawn">-48.5,16,144.5</point>
+    <point id="orange-wool-spawn">-48.5,16,-143.5</point>
+    <point id="yellow-wool-spawn">49.5,16,-143.5</point>
     <apply use="deny-beacon"/>
     <apply enter="never" region="wool-room-to-spawn-walls"/>
     <apply leave="never" region="playable-space" message="You may not leave the map!"/>
@@ -121,31 +149,35 @@
     <apply enter="only-blue" region="blue-spawn" message="You may not enter the enemy team's spawn!"/>
     <apply enter="only-red" region="blue-wool-rooms" message="You may not enter your own wool rooms!"/>
     <apply enter="only-blue" region="red-wool-rooms" message="You may not enter your own wool rooms!"/>
-    <apply block="only-red-wr" use="only-red" region="blue-wool-rooms" message="You may not modify the wool rooms!"/>
-    <apply block="only-blue-wr" use="only-blue" region="red-wool-rooms" message="You may not modify the wool rooms!"/>
-    <apply enter="never" region="victory-monuments" message="You may not obstruct the victory monuments!"/>
-    <apply block-break="only-iron" block-place="only-iron-renew" region="spawns" message="You may only break iron blocks in the spawn area!"/>
+    <apply block-break="deny-red-some-blue-all-wr" block-place="deny-blue" region="blue-wool-rooms" message="You may not edit the wool rooms!"/>
+    <apply block-break="deny-blue-some-red-all-wr" block-place="deny-red" region="red-wool-rooms" message="You may not edit the wool rooms!"/>
+    <apply enter="never" region="victory-monument-area" message="You may not obstruct the victory monuments!"/>
+    <apply block-break="only-iron" block-place="only-iron-renew" region="iron-zones" message="You may only break iron blocks in the spawn area!"/>
+    <apply block-place="only-lime" region="victory-monument-lime" message="You may only place the Lime Wool here!"/>
+    <apply block-place="only-light-blue" region="victory-monument-light-blue" message="You may only place the Light Blue Wool here!"/>
+    <apply block-place="only-yellow" region="victory-monument-yellow" message="You may only place the Yellow Wool here!"/>
+    <apply block-place="only-orange" region="victory-monument-orange" message="You may only place the Orange Wool here!"/>
     <apply block="deny(void)" block-physics="deny-redstone" message="You may not modify the void area!"/> <!-- Block 36 -->
 </regions>
 <wools craftable="false">
-    <wool team="blue-team" color="light blue" location="49.5,16,152.5">
+    <wool team="blue-team" color="light blue" location="49.5,16,137.5">
         <monument>
-            <block>1,16,-162</block>
+            <block id="victory-monument-light-blue">1,16,-154</block>
         </monument>
     </wool>
-    <wool team="blue-team" color="lime" location="-48.5,16,152.5">
+    <wool team="blue-team" color="lime" location="-48.5,16,137.5">
         <monument>
-            <block>-1,16,-162</block>
+            <block id="victory-monument-lime">-1,16,-154</block>
         </monument>
     </wool>
-    <wool team="red-team" color="orange" location="-48.5,16,-151.5">
+    <wool team="red-team" color="orange" location="-48.5,16,-136.5">
         <monument>
-            <block>-1,16,162</block>
+            <block id="victory-monument-orange">-1,16,154</block>
         </monument>
     </wool>
-    <wool team="red-team" color="yellow" location="49.5,16,-151.5">
+    <wool team="red-team" color="yellow" location="49.5,16,-136.5">
         <monument>
-            <block>1,16,162</block>
+            <block id="victory-monument-yellow">1,16,154</block>
         </monument>
     </wool>
 </wools>
@@ -164,7 +196,7 @@
     </spawner>
 </spawners>
 <renewables>
-    <renewable region="spawns" renew-filter="only-iron" rate="0.2"/>
+    <renewable region="spawns" renew-filter="only-iron" rate="0.75"/>
 </renewables>
 <toolrepair>
     <tool>iron sword</tool>
@@ -194,7 +226,6 @@
 </itemkeep>
 <kill-rewards>
     <kill-reward>
-        <item amount="16" material="arrow"/>
         <item amount="32" material="wood"/>
         <item amount="16" material="glass"/>
     </kill-reward>

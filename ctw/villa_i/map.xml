@@ -1,9 +1,8 @@
-<map proto="1.4.2">
+<map proto="1.5.0">
 <name>Villa I</name>
+<version>1.2.3</version>
 <variant id="christmas" world="christmas" override="true" slug="chilla">Chilla I</variant>
-<version>1.2.2</version>
 <objective>Capture the enemy team's wool!</objective>
-<gamemode>ctw</gamemode>
 <if variant="default">
     <created>2021-12-19</created>
     <slug>villa</slug>
@@ -11,6 +10,7 @@
 <if variant="christmas">
     <created>2022-11-28</created>
 </if>
+<include id="gapple-kill-reward"/>
 <authors>
     <author uuid="d5a64b26-15ea-46c4-8319-f9c83e82a1fa"/> <!-- Eliminate -->
 </authors>
@@ -114,9 +114,6 @@
         <team id="only-red">red</team>
         <filter id="wr-protection"/>
     </all>
-    <deny id="deny-void">
-       <void/>
-    </deny>
     <deny id="deny-void-break">
         <all>
             <any>
@@ -188,7 +185,7 @@
     <apply enter="only-red" region="blue-wool-rooms" message="You may not enter your own wool room!"/>
     <apply block="blue-in-wr" region="red-wool-rooms" message="You may not modify the wool room!"/>
     <apply block="red-in-wr" region="blue-wool-rooms" message="You may not modify the wool room!"/>
-    <apply block-place="deny-void" block-break="deny-void-break" region="void-area" message="You may not edit the void area!"/>
+    <apply block-place="deny(void)" block-break="deny-void-break" region="void-area" message="You may not edit the void area!"/>
     <apply block-break="only-gold" block-place="deny-players" region="spawn-protection" message="You may not modify the spawns!"/>
 </regions>
 <spawners>
@@ -277,7 +274,6 @@
         <if variant="christmas">
             <item amount="8" material="wood" damage="2"/>
         </if>
-        <item material="golden apple"/>
     </kill-reward>
 </kill-rewards>
 <hunger>

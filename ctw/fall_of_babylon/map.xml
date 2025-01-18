@@ -1,6 +1,6 @@
-<map proto="1.4.2">
+<map proto="1.5.0">
 <name>Fall of Babylon</name>
-<version>1.0.5</version>
+<version>1.0.8</version>
 <include id="gapple-kill-reward"/>
 <gamemode>ctw</gamemode>
 <created>2024-10-01</created>
@@ -8,16 +8,6 @@
 <authors>
     <author uuid="c25a6f7b-4c42-40da-8cd6-add53f0c84eb"/> <!-- arcadeboss -->
 </authors>
-<gamerules>
-    <doDaylightCycle>false</doDaylightCycle>
-    <doFireTick>true</doFireTick>
-    <randomTickSpeed>0</randomTickSpeed>
-</gamerules>
-<world>
-    <timeset>20000</timeset>
-    <timelock>on</timelock>
-</world>
-<maxbuildheight>75</maxbuildheight>
 <teams>
     <team id="red-team" color="red" max="34">Cyrus the Great</team>
     <team id="blue-team" color="blue" max="34">Prince Belshazzar</team>
@@ -98,7 +88,7 @@
     </give>
     <give filter="all(blocks_upgrade_variable=1,alive)">
         <kit>
-            <item material="log" damage="5" amount="64"/>
+            <item material="log_2" damage="1" amount="64"/>
             <item material="smooth brick" amount="16"/>
         </kit>
     </give>
@@ -133,12 +123,12 @@
     </kit>
 </kits>
 <spawns>
-    <spawn team="blue-team" kit="blue-kit" yaw="0" region="blue-spawn-point"/>
+    <spawn team="blue-team" kit="blue-kit" region="blue-spawn-point"/>
     <spawn team="red-team" kit="red-kit" yaw="180" region="red-spawn-point"/>
     <default>
         <regions>
             <point yaw="180">0.5,75,-2.5</point>
-            <point yaw="0">0.5,75,3.5</point>
+            <point>0.5,75,3.5</point>
         </regions>
     </default>
 </spawns>
@@ -290,7 +280,7 @@
 <actions>
     <!-- Wool seals - alerts entire match -->
     <action id="thunder-sounds" scope="match">
-        <sound key="ambient.weather.thunder" volume=".6" pitch="1"/>
+        <sound key="${entity.lightning_bolt.thunder}" volume=".6" pitch="1"/>
     </action>
     <trigger filter="all(lime-seal-broke,match-running)" scope="match">
         <action>
@@ -362,8 +352,8 @@
                 <find material="gold pickaxe"/>
                 <replace material="stone pickaxe"/>
             </replace-item>
-            <sound key="random.fizz" pitch="1" volume="1"/>
-            <sound key="random.fizz" pitch="0.9" volume="1"/>
+            <sound key="${entity.generic.extinguish_fire}" pitch="1" volume="1"/>
+            <sound key="${entity.generic.extinguish_fire}" pitch="0.9" volume="1"/>
             <message text="`4☠☠☠ `e`oDefensive pickaxes must stay at home!`r"/>
         </action>
     </trigger>
@@ -399,12 +389,12 @@
     </trigger>
     <!-- Store Alerts -->
     <action id="team-upgrade-sounds" scope="player">
-        <sound key="random.levelup" volume="0.4" pitch="0.8"/>
-        <sound key="fireworks.twinkle" volume="0.4" pitch="1"/>
+        <sound key="${entity.player.levelup}" volume="0.4" pitch="0.8"/>
+        <sound key="${entity.firework_rocket.twinkle}" volume="0.4" pitch="1"/>
     </action>
     <action id="team-upgrade-sounds-team" scope="team">
-        <sound key="random.levelup" volume="0.4" pitch="0.8"/>
-        <sound key="fireworks.twinkle" volume="0.4" pitch="1"/>
+        <sound key="${entity.player.levelup}" volume="0.4" pitch="0.8"/>
+        <sound key="${entity.firework_rocket.twinkle}" volume="0.4" pitch="1"/>
     </action>
     <!-- Spy reports limited to Protection and Sharpness upgrades -->
     <action id="team-upgrade-armor-with-spy-report" scope="team">
@@ -412,7 +402,7 @@
         <set var="upgrading_team" value="1"/>
         <switch-scope inner="match">
             <switch-scope inner="team" filter="upgrading_team=0">
-                <sound key="fireworks.twinkle_far" volume="0.9" pitch="1"/>
+                <sound key="${entity.firework_rocket.twinkle_far}" volume="0.9" pitch="1"/>
                 <sound preset="objective_mode" volume="0.3" pitch="1.5"/>
                 <sound preset="custom" volume="0.5"/>
                 <message text="`4☠☠☠ `e`oSpies report that the enemy has upgraded armor!`r"/>
@@ -424,7 +414,7 @@
         <set var="upgrading_team" value="1"/>
         <switch-scope inner="match">
             <switch-scope inner="team" filter="upgrading_team=0">
-                <sound key="fireworks.twinkle_far" volume="0.9" pitch="1"/>
+                <sound key="${entity.firework_rocket.twinkle_far}" volume="0.9" pitch="1"/>
                 <sound preset="objective_mode" volume="0.3" pitch="1.5"/>
                 <sound preset="custom" volume="0.5"/>
                 <message text="`4☠☠☠ `e`oSpies report that the enemy has upgraded swords!`r"/>
@@ -2283,7 +2273,7 @@
         <item material="iron pickaxe" enchantment="efficiency:2" name="`6`lHaste II (2 of 2)" lore="`7Your team permanently gains|`7Haste II Effect|" price="120" currency="gold ingot" action="haste-upgrade-2-set" filter="haste_upgrade_variable=1"/>
         <item material="obsidian" name="`6`lMining Fatigue" lore="`7Your team permanently gains|`7Mining Fatigue Trap|`7Slow the Invaders at Home|" price="100" currency="gold ingot" action="fatigue-upgrade-1-set" filter="fatigue_upgrade_variable=0"/>
         <item material="potion" damage="3" name="`6`lFire Resistance I" lore="`7Your team permanently gains|`7Fire Resistance Potion in Kit|`8`o45 seconds|" price="40" currency="gold ingot" action="fireresist-upgrade-1-set" filter="fireresist_upgrade_variable=0"/>
-        <item material="log" amount="64" damage="5" name="`6`lBlocks Upgrade" lore="`7Your team permanently gains|`7Additional Blocks in Kit|" price="40" currency="gold ingot" action="blocks-upgrade-1-set" filter="blocks_upgrade_variable=0"/>
+        <item material="log_2" damage="1" amount="64" name="`6`lBlocks Upgrade" lore="`7Your team permanently gains|`7Additional Blocks in Kit|" price="40" currency="gold ingot" action="blocks-upgrade-1-set" filter="blocks_upgrade_variable=0"/>
         <item material="water bucket" name="`6`lWater Bucket" lore="`7Your team permanently gains|`7Water Bucket in Kit|" price="30" currency="gold ingot" action="bucket-upgrade-1-set" filter="bucket_upgrade_variable=0"/>
         <item material="potion" damage="2" name="`6`lSpeed I" lore="`7Your team permanently gains|`7Speed Effect at Home|" price="50" currency="gold ingot" action="speed-upgrade-1-set" filter="speed_upgrade_variable=0"/>
         <item material="web" name="`6`lWoolroom Webs" lore="`7Your woolrooms gain refreshed|`7Defensive Webs in entrance|`6★ `8`oSome webs are missing now!|" price="10" currency="gold ingot" action="web-upgrade-red" filter="all(red-web-broke,only-red)"/>
@@ -2431,14 +2421,14 @@
     <apply block-break="only-spawn-seals" region="loot-seals"/>
     <apply block-break="only-red" region="blue-webs" message="You may not break the defensive webs!"/>
     <apply block-break="only-blue" region="red-webs" message="You may not break the defensive webs!"/>
-    <apply enter="only-blue" region="blue-spawn" message="You may not pass through the middle of the enemy spawn!"/>
-    <apply enter="only-blue" region="blue-spawn-2" message="You may not pass through the middle of the enemy spawn!"/>
-    <apply enter="only-red" region="red-spawn" message="You may not pass through the middle of the enemy spawn!"/>
-    <apply enter="only-red" region="red-spawn-2" message="You may not pass through the middle of the enemy spawn!"/>
+    <apply enter="only-blue" region="blue-spawn" message="You may not pass through the middle of the enemy's spawn!"/>
+    <apply enter="only-blue" region="blue-spawn-2" message="You may not pass through the middle of the enemy's spawn!"/>
+    <apply enter="only-red" region="red-spawn" message="You may not pass through the middle of the enemy's spawn!"/>
+    <apply enter="only-red" region="red-spawn-2" message="You may not pass through the middle of the enemy's spawn!"/>
     <apply block-place="never" block-break="only-wool-breakable" region="reds-woolrooms" message="You may not edit this part of the wool room!"/>
     <apply block-place="never" block-break="only-wool-breakable" region="blues-woolrooms" message="You may not edit this part of the wool room!"/>
-    <apply enter="only-blue" region="reds-woolrooms" message="You may not enter the enemy wool room!"/>
-    <apply enter="only-red" region="blues-woolrooms" message="You may not enter the enemy wool room!"/>
+    <apply enter="only-blue" region="reds-woolrooms" message="You may not enter the enemy's wool room!"/>
+    <apply enter="only-red" region="blues-woolrooms" message="You may not enter the enemy's wool room!"/>
     <apply block-place="only-spawn-placeable" block-break="only-iron-stuff" region="iron-regen" message="You may only break iron here!"/>
     <apply block-place="only-water-redstone-place" block-break="only-waters-leaves" region="not-build-area" message="You may not edit this area!"/>
     <apply block-place="never" region="bottom-no-build" message="You may not build in the land of no return!"/>
@@ -2562,4 +2552,14 @@
         </filter>
     </kill-reward>
 </kill-rewards>
+<gamerules>
+    <doDaylightCycle>false</doDaylightCycle>
+    <doFireTick>true</doFireTick>
+    <randomTickSpeed>0</randomTickSpeed>
+</gamerules>
+<world>
+    <timeset>20000</timeset>
+    <timelock>on</timelock>
+</world>
+<maxbuildheight>75</maxbuildheight>
 </map>
