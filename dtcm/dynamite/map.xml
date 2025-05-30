@@ -1,0 +1,320 @@
+<map proto="1.5.0">
+<version>1.2.3</version>
+<name>Dynamite</name>
+<created>2025-02-13</created>
+<phase>development</phase>
+<authors>
+    <author uuid="08f38600-083e-4917-97d5-3e18e4c0c9de"/> <!-- Edde -->
+    <author uuid="1aad55f7-2dea-4f22-85ca-ad9de3a78609"/> <!-- Technodono -->
+</authors>
+<contributors>
+    <contributor uuid="3a9ef640-68e3-4202-b5bc-ab648b64a40e" contribution="XML"/> <!-- iCompass -->
+</contributors>
+<include id="gapple-kill-reward"/>
+<objective>Leak the enemy's core and destroy their endstone monuments</objective>
+<broadcasts>
+    <tip after="5s" every="4m" count="8">You may not place TNT on the opponent's side!</tip>
+</broadcasts>
+<teams>
+    <team id="red-team" max="20" max-overfill="25" color="red">Red</team>
+    <team id="blue-team" max="20" max-overfill="25" color="dark aqua">Blue</team>
+</teams>
+<kits>
+    <kit id="spawn-kit">
+        <clear/>
+        <item slot="0" material="iron sword" unbreakable="true"/>
+        <item slot="1" material="bow" unbreakable="true"/>
+        <item slot="2" material="diamond pickaxe" unbreakable="true"/>
+        <item slot="3" material="diamond axe" unbreakable="true"/>
+        <item slot="5" material="tnt" amount="64"/>
+        <item slot="7" material="golden apple"/>
+        <item slot="8" material="water bucket"/>
+        <item slot="28" material="arrow" amount="16"/>
+        <item slot="30" material="shears" unbreakable="true"/>
+        <item slot="32" material="tnt" amount="64"/>
+        <item slot="35" material="water bucket"/>
+        <item slot="9" amount="16" material="stone button"/>
+        <item slot="10" amount="16" material="lever"/>
+        <item slot="11" amount="16" material="stone plate"/>
+        <item slot="12" amount="16" material="fence"/>
+        <item slot="14" amount="16" material="ladder"/>
+        <item slot="15" amount="64" material="redstone"/>
+        <item slot="16" amount="16" material="diode"/>
+        <helmet unbreakable="true" team-color="true" material="leather helmet"/>
+        <chestplate unbreakable="true" material="chainmail chestplate">
+            <enchantment level="2">projectile protection</enchantment>
+            <enchantment>blast protection</enchantment>
+        </chestplate>
+        <leggings unbreakable="true" team-color="true" material="leather leggings"/>
+        <boots unbreakable="true" team-color="true" material="leather boots">
+            <enchantment level="2">feather falling</enchantment>
+        </boots>
+        <effect duration="4s" amplifier="255">damage resistance</effect>
+    </kit>
+    <kit id="blue-kit" parent="spawn-kit">
+        <item slot="4" material="wood" amount="64" damage="5"/>
+        <item slot="31" material="wood" amount="32" damage="5"/>
+        <item slot="13" material="wood step" amount="16" damage="5"/>
+    </kit>
+    <kit id="red-kit" parent="spawn-kit">
+        <item slot="4" material="wood" amount="64" damage="3"/>
+        <item slot="31" material="wood" amount="32" damage="3"/>
+        <item slot="13" material="wood step" amount="16" damage="3"/>
+    </kit>
+</kits>
+<filters>
+    <material id="only-iron">iron block</material>
+    <material id="tnt">tnt</material>
+    <deny id="no-stone">
+        <any>
+            <material>stone</material>
+            <material>cobblestone</material>
+        </any>
+    </deny>
+    <deny id="no-tnt-damage">
+        <cause>explosion</cause>
+    </deny>
+</filters>
+<regions>
+    <cuboid id="iron-red-B" min="2,12,-50" max="-10,14,-43"/>
+    <cuboid id="iron-red-A" min="-50,12,2" max="-43,14,-10"/>
+    <cuboid id="iron-blue-B" min="23,12,75" max="35,14,68"/>
+    <cuboid id="iron-blue-A" min="75,12,23" max="68,14,35"/>
+    <union id="spawns">
+        <complement id="red-spawn">
+            <cuboid min="-42,12,-42" max="-59,26,-59"/>
+            <half origin="-44.25,0,-44.25" normal="1,0,1"/>
+            <half origin="-48.25,0,-52.75" normal="1,0,-1"/>
+            <half origin="-52.75,0,-48.25" normal="-1,0,1"/>
+        </complement>
+        <complement id="blue-spawn">
+            <cuboid min="67,12,67" max="84,26,84"/>
+            <half origin="69.25,0,69.25" normal="-1,0,-1"/>
+            <half origin="77.75,0,73.25" normal="1,0,-1"/>
+            <half origin="73.25,0,77.75" normal="-1,0,1"/>
+        </complement>
+    </union>
+    <apply region="spawns" block="never" message="You may not modify this area"/>
+    <apply region="spawns" enter="never" message="You may not enter spawn"/>
+    <negative id="outside-playable">
+        <union>
+            <mirror id="red-playable" origin="12.5,0,12.5" normal="-1,0,-1">
+                <union id="blue-playable">
+                    <complement>
+                        <rectangle min="-1,-1" max="76,76"/>
+                        <half origin="73.75,0,1.25" normal="1,0,-1"/>
+                        <half origin="1.25,0,73.75" normal="-1,0,1"/>
+                        <half origin="52.75,0,52.75" normal="1,0,1"/>
+                        <half origin="-27.75,0,-27.75" normal="-1,0,-1"/>
+                    </complement>
+                    <complement id="blue-outside-spawn">
+                        <rectangle min="43,43" max="73,73"/>
+                        <rectangle min="43,43" max="55,55"/>
+                        <half origin="70.75,0,45.25" normal="1,0,-1"/>
+                        <half origin="45.25,0,70.75" normal="-1,0,1"/>
+                        <half origin="69.25,0,69.25" normal="1,0,1"/>
+                    </complement>
+                    <rectangle min="69,36" max="36,69"/>
+                </union>
+            </mirror>
+            <region id="blue-playable"/>
+            <complement id="middle">
+                <rectangle min="-28,-28" max="53,53"/>
+                <half id="middle-side-1" origin="39.75,0,-14.75" normal="1,0,-1"/>
+                <half id="middle-side-2" origin="-14.75,0,39.75" normal="-1,0,1"/>
+                <half id="red-side" origin="-1.25,0,-1.25" normal="-1,0,-1"/>
+                <half id="blue-side" origin="26.25,0,26.25" normal="1,0,1"/>
+            </complement>
+        </union>
+    </negative>
+    <apply region="outside-playable" block="never" message="You may not interact with blocks outside the playing field"/>
+    <apply region="red-side" block-place="deny(all(tnt,blue-team))" message="You may not place TNT on the opponent's side"/>
+    <apply region="blue-side" block-place="deny(all(tnt,red-team))" message="You may not place TNT on the opponent's side"/>
+    <apply block-place="no-stone"/>
+    <apply block-break="no-tnt-damage">
+        <region>
+            <union>
+                <region id="blue-outside-spawn"/>
+                <mirror origin="12.5,0,12.5" normal="-1,0,-1"><region id="blue-outside-spawn"/></mirror>
+            </union>
+        </region>
+    </apply>
+</regions>
+<spawns>
+    <default yaw="45">
+        <regions>
+            <point>72.5,39,-47.5</point>
+        </regions>
+    </default>
+    <spawn team="red-team" kit="red-kit" yaw="-45">
+        <regions>
+            <cuboid min="-57,19,-57" max="-54,19,-54"/>
+        </regions>
+    </spawn>
+    <spawn team="blue-team" kit="blue-kit" yaw="135">
+        <regions>
+            <cuboid min="79,19,79" max="82,19,82"/>
+        </regions>
+    </spawn>
+</spawns>
+<renewables>
+    <renewable region="iron-red-A" renew-filter="only-iron"/>
+    <renewable region="iron-red-B" renew-filter="only-iron"/>
+    <renewable region="iron-blue-A" renew-filter="only-iron"/>
+    <renewable region="iron-blue-B" renew-filter="only-iron"/>
+</renewables>
+<modes>
+    <mode after="20m" material="ender stone" name="END STONE CORE MODE"/>
+    <mode after="35m" material="glass" name="GLASS CORE MODE"/>
+</modes>
+<cores>
+    <core team="red-team" material="obsidian" leak="7" mode-changes="true">
+        <region>
+            <cuboid min="-22,12,-22" max="-27,17,-27"/>
+        </region>
+    </core>
+    <core team="blue-team" material="obsidian" leak="7" mode-changes="true">
+        <region>
+            <cuboid min="47,12,47" max="52,17,52"/>
+        </region>
+    </core>
+</cores>
+<destroyables show-progress="true" materials="ender stone" repairable="false">
+    <destroyable name="Monument B" owner="red-team">
+        <region>
+            <cuboid min="9,7,-31" max="6,10,-34"/>
+        </region>
+    </destroyable>
+    <destroyable name="Monument A" owner="red-team">
+        <region>
+            <cuboid min="-31,7,9" max="-34,10,6"/>
+        </region>
+    </destroyable>
+    <destroyable name="Monument B" owner="blue-team">
+        <region>
+            <cuboid min="16,7,56" max="19,10,59"/>
+        </region>
+    </destroyable>
+    <destroyable name="Monument A" owner="blue-team">
+        <region>
+            <cuboid min="56,7,16" max="59,10,19"/>
+        </region>
+    </destroyable>
+</destroyables>
+<tnt>
+    <power>3.4</power>
+</tnt>
+<item-mods>
+    <rule>
+        <match>
+            <material>gold chestplate</material>
+        </match>
+        <modify unbreakable="true">
+            <enchantment level="3">protection</enchantment>
+            <enchantment level="1">blast protection</enchantment>
+        </modify>
+    </rule>
+    <rule>
+        <match>
+            <material>gold leggings</material>
+        </match>
+        <modify unbreakable="true">
+            <enchantment level="3">protection</enchantment>
+        </modify>
+    </rule>
+    <rule>
+        <match>
+            <material>gold helmet</material>
+        </match>
+        <modify unbreakable="true">
+            <enchantment level="3">protection</enchantment>
+        </modify>
+    </rule>
+    <rule>
+        <match>
+            <material>gold boots</material>
+        </match>
+        <modify unbreakable="true">
+            <enchantment level="3">protection</enchantment>
+            <enchantment level="2">feather falling</enchantment>
+        </modify>
+    </rule>
+    <rule>
+        <match>
+            <material>gold sword</material>
+        </match>
+        <modify unbreakable="true">
+            <enchantment level="3">sharpness</enchantment>
+        </modify>
+    </rule>
+    <rule>
+        <match>
+            <material>iron boots</material>
+        </match>
+        <modify>
+            <enchantment level="2">feather falling</enchantment>
+        </modify>
+    </rule>
+</item-mods>
+<maxbuildheight>25</maxbuildheight>
+<kill-rewards>
+    <kill-reward>
+        <item material="arrow" amount="6"/>
+        <item material="tnt" amount="24"/>
+    </kill-reward>
+    <kill-reward filter="blue-team">
+        <item material="wood" amount="16" damage="5"/>
+    </kill-reward>
+    <kill-reward filter="red-team">
+        <item material="wood" amount="16" damage="3"/>
+    </kill-reward>
+</kill-rewards>
+<itemremove>
+    <item>iron sword</item>
+    <item>bow</item>
+    <item>diamond pickaxe</item>
+    <item>diamond axe</item>
+    <item>shears</item>
+    <item>wood</item>
+    <item>water bucket</item>
+    <item>arrow</item>
+    <item>stone button</item>
+    <item>lever</item>
+    <item>stone plate</item>
+    <item>fence</item>
+    <item>wood step</item>
+    <item>ladder</item>
+    <item>redstone</item>
+    <item>diode</item>
+    <item>leather helmet</item>
+    <item>chainmail chestplate</item>
+    <item>leather leggings</item>
+    <item>leather boots</item>
+    <item>sandstone</item>
+    <item>wool</item>
+    <item>log</item>
+    <item>wood stairs</item>
+    <item>spruce wood stairs</item>
+    <item>jungle wood stairs</item>
+    <item>acacia stairs</item>
+    <item>dark oak stairs</item>
+    <item>step</item>
+    <item>piston base</item>
+    <item>melon block</item>
+    <item>emerald block</item>
+    <item>pumpkin</item>
+    <item>quartz block</item>
+    <item>quartz stairs</item>
+    <item>stained clay</item>
+    <item>hard clay</item>
+    <item>ender stone</item>
+    <item>obsidian</item>
+</itemremove>
+<hunger>
+    <depletion>off</depletion>
+</hunger>
+<world>
+    <timeset>12620</timeset>
+    <timelock>on</timelock>
+</world>
+</map>

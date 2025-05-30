@@ -9,7 +9,7 @@
                                                     Definitive Edition
 -->
 <name>The Grand Dueling Tournament II</name>
-<version>2.8.2</version>
+<version>2.9.1</version>
 <objective>Defeat opposing teams in The Grand ${tournament-type} Tournament!</objective>
 <phase>staging</phase>
 <variant id="spleef" world="spleef" override="true">The Grand Spleefing Tournament II</variant>
@@ -44,12 +44,14 @@
     <created>2016-06-29</created>
     <constant id="tournament-type">Spleefing</constant>
     <constant id="tournament-action">spleef</constant>
-    <constant id="kit-count">5</constant>
+    <constant id="kit-count">7</constant>
     <constant id="kit-0-name">`bClassic</constant>
     <constant id="kit-1-name">`aBuild</constant>
     <constant id="kit-2-name">`cGrenade</constant>
     <constant id="kit-3-name">`2Creep Slap</constant>
     <constant id="kit-4-name">`bClassic (but with `cTNT`b)</constant>
+    <constant id="kit-5-name">`3Bow Spleef</constant>
+    <constant id="kit-6-name">`eBlock Runner</constant>
 </if>
 <if variant="cannon">
     <created>2023-11-12</created>
@@ -443,17 +445,20 @@
         </kit>
     </if>
     <if variant="spleef">
-        <kit id="kit-0"> <!-- classic -->
+        <kit id="base-kit">
+            <helmet material="leather helmet" unbreakable="true" team-color="true"/>
+            <chestplate material="leather chestplate" unbreakable="true" team-color="true"/>
+            <boots material="leather boots" unbreakable="true" team-color="true"/>
+        </kit>
+        <kit id="kit-0" parent="base-kit"> <!-- classic -->
             <item slot="0" material="diamond spade" unbreakable="true">
                 <enchantment level="5">efficiency</enchantment>
                 <can-destroy>
                     <material>snow block</material>
                 </can-destroy>
             </item>
-            <chestplate material="leather chestplate" unbreakable="true" team-color="true"/>
-            <boots material="leather boots" unbreakable="true" team-color="true"/>
         </kit>
-        <kit id="kit-1"> <!-- build -->
+        <kit id="kit-1" parent="base-kit"> <!-- build -->
             <item slot="0" material="diamond spade" unbreakable="true">
                 <enchantment level="5">efficiency</enchantment>
                 <can-destroy>
@@ -466,15 +471,11 @@
                 </can-place-on>
             </item>
             <item slot="2" material="snow ball" amount="16"/>
-            <helmet material="gold helmet" unbreakable="true"/>
-            <chestplate material="leather chestplate" unbreakable="true" team-color="true"/>
-            <leggings material="iron leggings" unbreakable="true"/>
-            <boots material="leather boots" unbreakable="true" team-color="true"/>
             <action>
                 <set var="current_kill_reward" value="1"/>
             </action>
         </kit>
-        <kit id="kit-2"> <!-- grenade -->
+        <kit id="kit-2" parent="base-kit"> <!-- grenade -->
             <item slot="0" material="diamond spade" unbreakable="true">
                 <enchantment level="5">efficiency</enchantment>
                 <can-destroy>
@@ -482,10 +483,6 @@
                 </can-destroy>
             </item>
             <item slot="1" material="egg" amount="36" name="`rGrenade" grenade="true" grenade-power="0.5"/>
-            <helmet material="iron helmet" unbreakable="true"/>
-            <chestplate material="iron chestplate" unbreakable="true" team-color="true"/>
-            <leggings material="iron leggings" unbreakable="true"/>
-            <boots material="leather boots" unbreakable="true" team-color="true"/>
             <action>
                 <set var="current_kill_reward" value="2"/>
             </action>
@@ -506,17 +503,16 @@
             <item slot="2" material="flint and steel" unbreakable="true">
                 <enchantment level="7">knockback</enchantment>
             </item>
-            <helmet material="iron helmet" unbreakable="true"/>
-            <chestplate material="iron chestplate" unbreakable="true">
+            <helmet material="leather helmet" unbreakable="true" team-color="true"/>
+            <chestplate material="leather chestplate" unbreakable="true" team-color="true">
                 <enchantment level="2">protection explosions</enchantment>
             </chestplate>
-            <leggings material="iron leggings" unbreakable="true"/>
             <boots material="leather boots" unbreakable="true" team-color="true"/>
             <action>
                 <set var="current_kill_reward" value="3"/>
             </action>
         </kit>
-        <kit id="kit-4"> <!-- classic w/ tnt -->
+        <kit id="kit-4" parent="base-kit"> <!-- classic w/ tnt -->
             <item slot="0" material="diamond spade" unbreakable="true">
                 <enchantment level="5">efficiency</enchantment>
                 <enchantment level="5">knockback</enchantment>
@@ -529,13 +525,19 @@
                     <all-blocks/>
                 </can-place-on>
             </item>
-            <helmet material="gold helmet" unbreakable="true"/>
-            <chestplate material="leather chestplate" unbreakable="true" team-color="true"/>
-            <leggings material="gold leggings" unbreakable="true"/>
-            <boots material="leather boots" unbreakable="true" team-color="true"/>
             <action>
                 <set var="current_kill_reward" value="4"/>
             </action>
+        </kit>
+        <kit id="kit-5" parent="base-kit"> <!-- bow spleef -->
+            <item slot="0" material="bow" unbreakable="true">
+                <enchantment>flame</enchantment>
+                <enchantment>infinity</enchantment>
+            </item>
+            <item slot="9" material="arrow"/>
+        </kit>
+        <kit id="kit-6" parent="base-kit"> <!-- block runner -->
+            <item slot="1" material="snow ball" amount="16"/>
         </kit>
     </if>
     <if variant="cannon">
@@ -771,6 +773,15 @@
                     </if>
                 </all>
             </if>
+            <if variant="spleef">
+                <all>
+                    <variable var="current_kit">5</variable> <!-- bow spleef -->
+                    <any>
+                        <cause>projectile</cause>
+                        <cause>combustion</cause>
+                    </any>
+                </all>
+            </if>
             <if variant="cannon">
                 <cause>fall</cause>
             </if>
@@ -813,8 +824,12 @@
     <if variant="spleef">
         <all id="breakable-blocks">
             <region id="all-arenas"/>
-            <material>snow block</material>
+            <any>
+                <material id="snow">snow block</material>
+                <material>tnt</material>
+            </any>
         </all>
+        <entity id="tnt-primed">primed tnt</entity>
     </if>
     <if variant="cannon">
         <any id="arena-wall-material">
@@ -1963,6 +1978,7 @@
             <translate id="arena-4-spectator" offset="-44,0,0" region="arena-3-spectator"/>
         </if>
     </union>
+    <cuboid id="spleef-platform" min="179,10,-63" max="14,11,126"/>
     <apply region="lobby" use="never" block-place="allow-tnt" block-break="never"/>
     <apply region="all-arenas" use="deny-not-playing"/>
     <apply enter="spectator_mode=0">
@@ -1971,7 +1987,7 @@
         </region>
     </apply>
     <if variant="default, spleef">
-        <apply block-break="breakable-blocks"/>
+        <apply block-break="breakable-blocks" block-physics="breakable-blocks"/>
     </if>
     <if variant="cacti">
         <apply block="allowed-interactions"/>
@@ -2304,8 +2320,6 @@
             <translate id="round-2-arenas-segment-13" offset="0,0,66" region="round-1-arenas-segment-13"/>
             <translate id="round-3-arenas-segment-13" offset="0,0,66" region="round-2-arenas-segment-13"/>
         </union>
-    </if>
-    <if variant="cacti">
         <union id="arena-team-color-objects">
             <cuboid id="round-1-arena-1-spawn-1-color-objects" min="159,7,-53" max="166,25,-42"/>
             <translate id="round-1-arena-1-spawn-2-color-objects" offset="0,0,26" region="round-1-arena-1-spawn-1-color-objects"/>
@@ -2671,6 +2685,12 @@
             </action>
             <action filter="any(current_kit=5, current_kit=9, current_kit=11)">
                 <set var="current_platform_bridge" value="4"/> <!-- lower default -->
+            </action>
+        </if>
+        <if variant="spleef">
+            <action filter="current_kit=5"> <!-- bow spleef -->
+                <message text="fill"/>
+                <fill region="spleef-platform" material="tnt" filter="all(snow, any(all(round-1, round-1-arenas), all(round-2, round-2-arenas), all(round-3, round-3-arenas)))"/>
             </action>
         </if>
     </action>
@@ -3364,7 +3384,7 @@
         <trigger scope="match">
             <filter>
                 <after duration="30s" message="Overtime in {0}">
-                    <after duration="2s" filter="all(any(all(current_round=1, round-1-starting), all(current_round=2, round-2-starting), all(current_round=3, round-3-starting)), not(between-rounds))"/>
+                    <after duration="2m30s" filter="all(any(all(current_round=1, round-1-starting), all(current_round=2, round-2-starting), all(current_round=3, round-3-starting)), not(between-rounds))"/>
                 </after>
             </filter>
             <action>
@@ -3397,6 +3417,14 @@
                         </item>
                     </kit>
                 </switch-scope>
+            </action>
+        </trigger>
+        <trigger scope="match">
+            <filter>
+                <pulse id="tnt-pulse" period="0.5s" duration="0.1s" filter="current_kit=5"/>
+            </filter>
+            <action>
+                <kill-entities filter="all(tnt-primed, any(all(round-1, round-1-arenas), all(round-2, round-2-arenas), all(round-3, round-3-arenas)))"/>
             </action>
         </trigger>
     </if>
@@ -3882,13 +3910,38 @@
     <renewables>
         <renewable region="all-arenas" interval="80" grow="false" particles="true">
             <renew-filter>
-                <material>snow block</material>
+                <all>
+                    <material>snow block</material>
+                    <filter id="any(all(round-1, round-1-arenas), all(round-2, round-2-arenas), all(round-3, round-3-arenas))"/>
+                    <not>
+                        <variable var="current_kit">5..6</variable> <!-- bow spleef, block runner -->
+                    </not>
+                </all>
             </renew-filter>
             <replace-filter>
                 <material>air</material>
             </replace-filter>
         </renewable>
     </renewables>
+    <block-drops>
+        <rule trample="true">
+            <filter>
+                <all>
+                    <material>snow block</material>
+                    <cause>trample</cause>
+                    <variable var="current_kit">6</variable>
+                </all>
+            </filter>
+            <replacement>wool</replacement>
+        </rule>
+    </block-drops>
+    <falling-blocks>
+        <rule sticky="never" delay="30">
+            <filter>
+                <material>wool</material>
+            </filter>
+        </rule>
+    </falling-blocks>
 </if>
 <if variant="cannon">
     <structures update="false" air="true">
