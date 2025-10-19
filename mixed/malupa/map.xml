@@ -1,10 +1,6 @@
 <map proto="1.5.0">
 <name>Malupa</name>
-<<<<<<< HEAD:mixed/standard/malupa/map.xml
-<version>1.3.2</version>
-=======
-<version>1.3.3</version>
->>>>>>> upstream/master:mixed/malupa/map.xml
+<version>1.3.4</version>
 <objective>Capture the enemy team's two wools!</objective>
 <gamemode>ctw</gamemode>
 <created>2021-08-29</created>
@@ -59,13 +55,6 @@
 </spawns>
 <filters>
     <deny id="redstone-physics">
-<<<<<<< HEAD:mixed/standard/malupa/map.xml
-        <any>
-            <material>redstone wire</material>
-            <material>redstone torch on</material>
-            <material>redstone torch off</material>
-        </any>
-=======
         <all>
             <any>
                 <material>redstone wire</material>
@@ -74,7 +63,6 @@
             </any>
             <void/>
         </all>
->>>>>>> upstream/master:mixed/malupa/map.xml
     </deny>
     <material id="only-iron">iron block</material>
     <material id="only-air">air</material>
@@ -175,11 +163,7 @@
             </union>
         </union>
     </union>
-<<<<<<< HEAD:mixed/standard/malupa/map.xml
-    <apply block-physics="redstone-physics"/>
-=======
     <apply block-physics="redstone-physics" block-break="redstone-physics"/>
->>>>>>> upstream/master:mixed/malupa/map.xml
     <apply block="redlanes-1" region="blue-lanes" message="You can't build here until the enemy's monument is destroyed!"/>
     <apply block="bluelanes-1" region="red-lanes" message="You can't build here until the enemy's monument is destroyed!"/>
     <apply enter="only-blue" region="blue-protection" message="You may not enter the opponent's spawn!"/>
@@ -198,7 +182,7 @@
 <actions>
     <trigger scope="match">
         <filter>
-            <after message="`bWater Lanes towards `eYellow `rand `dPink `rWill Spawn In {0}" duration="5s" filter="blue-mon-destroyed"/>
+            <after message="`bWater Lanes towards `eYellow `band `dPink `bwill spawn in {0}" duration="5s" filter="blue-mon-destroyed"/>
         </filter>
         <action>
             <message text="`4Red's `bwater lanes have been added!"/>
@@ -209,7 +193,7 @@
     </trigger>
     <trigger scope="match">
         <filter>
-            <after message="`bWater Lanes towards `aLime `rand `6Orange `rWill Spawn In {0}" duration="5s" filter="red-mon-destroyed"/>
+            <after message="`bWater Lanes towards `aLime `band `6Orange `bwill spawn in {0}" duration="5s" filter="red-mon-destroyed"/>
         </filter>
         <action>
             <message text="`9Blue's `bwater lanes have been added!"/>
