@@ -1,7 +1,6 @@
 <map proto="1.5.0">
 <name>Fox Dream</name>
-<version>1.0.1</version>
-<phase>staging</phase>
+<version>1.0.2</version>
 <objective>Destroy the enemy team's obsidian monument!</objective>
 <created>2025-10-01</created>
 <include id="gapple-kill-reward"/>
@@ -117,7 +116,7 @@
         <item amount="16" damage="3" material="wood"/>
     </kill-reward>
 </kill-rewards>
-<maxbuildheight>35</maxbuildheight>
+<maxbuildheight>33</maxbuildheight>
 <hunger>
     <depletion>off</depletion>
 </hunger>
