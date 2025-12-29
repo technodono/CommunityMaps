@@ -410,13 +410,13 @@
     </trigger>
     <trigger scope="team" action="kill-team">
         <filter>
-                <after duration="5s" message="Returning to OBS in: {0}"><all><filter id="team_kill_trigger = 1"/></all></after>
+                <after duration="3s" message="Returning to OBS in: {0}"><all><filter id="team_kill_trigger = 1"/></all></after>
         </filter>
     </trigger>
     <trigger scope="team" action="send-players-to-new-teams">
         <filter>
             <all>
-                <after duration="5s" message="Swapping teams in: {0}"><filter id="team_swap_trigger = 1"/></after>
+                <after duration="3s" message="Swapping teams in: {0}"><filter id="team_swap_trigger = 1"/></after>
             </all>
         </filter>
     </trigger>
