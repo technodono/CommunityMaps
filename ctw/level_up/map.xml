@@ -1,6 +1,6 @@
 <map proto="1.5.0">
 <name>Level Up</name>
-<version>1.0.2</version>
+<version>1.0.5</version>
 <objective>Capture the enemy's wool!</objective>
 <created>2025-02-02</created>
 <include id="gapple-kill-reward"/>
@@ -50,9 +50,11 @@
     <wool team="blue-team" color="red" monument="red-wool-mon" location="23.5,3.2,-190.5"/>
 </wools>
 <filters>
-    <team id="only-blue">blue-team</team>
-    <team id="only-red">red-team</team>
     <material id="only-iron">iron block</material>
+    <any id="water-blocks">
+        <material>stationary water</material>
+        <material>water</material>
+    </any>
 </filters>
 <regions>
     <complement id="void-area">
@@ -75,22 +77,22 @@
         <rectangle id="red-spawn" min="-44,111" max="-89,78"/>
     </union>
     <union id="wool-rooms">
-        <rectangle id="blue-wool-room" min="14,-181" max="33,-200"/> <!-- blue defends / red attacks -->
-        <rectangle id="red-wool-room" min="-13,182" max="-32,201"/> <!-- red defends / blue attacks -->
+        <rectangle id="blue-wool-room" min="15,-181" max="32,-199"/> <!-- blue defends / red attacks -->
+        <rectangle id="red-wool-room" min="-14,182" max="-31,200"/> <!-- red defends / blue attacks -->
     </union>
     <point id="blue-wool-spawn">23.5,3.2,-190.5</point>
     <point id="red-wool-spawn">-22.5,3.2,191.5</point>
     <block id="blue-wool-mon">-86,15,94</block>
     <block id="red-wool-mon">86,15,-94</block>
-    <apply enter="only-blue" region="blue-spawn" message="You may not enter the enemy's spawn!"/>
-    <apply enter="only-red" region="red-spawn" message="You may not enter the enemy's spawn!"/>
-    <apply enter="only-blue" region="red-wool-room" message="You may not enter your own wool room!"/>
-    <apply enter="only-red" region="blue-wool-room" message="You may not enter your own wool room!"/>
-    <apply block="only-blue" region="red-wool-room" message="You may not edit your own wool room!"/>
-    <apply block="only-red" region="blue-wool-room" message="You may not edit your own wool room!"/>
+    <apply enter="blue-team" region="blue-spawn" message="You may not enter the enemy's spawn!"/>
+    <apply enter="red-team" region="red-spawn" message="You may not enter the enemy's spawn!"/>
+    <apply enter="blue-team" region="red-wool-room" message="You may not enter your own wool room!"/>
+    <apply enter="red-team" region="blue-wool-room" message="You may not enter your own wool room!"/>
+    <apply block="blue-team" region="red-wool-room" message="You may not edit your own wool room!"/>
+    <apply block="red-team" region="blue-wool-room" message="You may not edit your own wool room!"/>
     <apply block-break="allow(only-iron)" region="spawns"/>
     <apply block-place="deny(void)" region="void-area" message="You may not build in the void."/>
-    <apply block="deny(participating)" region="spawns" message="You may only break iron blocks in spawn"/>
+    <apply block="any(deny(participating),deny(water-blocks))" region="spawns" message="You may only break iron blocks in spawn"/>
 </regions>
 <spawners>
     <spawner spawn-region="blue-wool-spawn" player-region="blue-wool-room" delay="2s">
@@ -594,14 +596,16 @@
     <tool>water bucket</tool>
     <tool>bucket</tool>
     <tool>arrow</tool>
-    <tool>leather helmet</tool>
-    <tool>leather chestplate</tool>
-    <tool>chainmail leggings</tool>
-    <tool>leather boots</tool>
 </toolrepair>
 <itemkeep>
     <item>golden apple</item>
 </itemkeep>
+<itemremove> <!-- If color ever works on item-mods, make dropped armor get recolored to the player's team color. Iron armor is easy to craft so not a huge deal -->
+    <item>leather helmet</item>
+    <item>leather chestplate</item>
+    <item>chainmail leggings</item>
+    <item>leather boots</item>
+</itemremove>
 <kill-rewards>
     <kill-reward>
         <item material="wood" amount="16"/>
